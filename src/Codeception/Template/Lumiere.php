@@ -264,7 +264,7 @@ class Lumiere extends Wpbrowser {
 				$value = $value ? 'true' : 'false';
 			} elseif ( null === $value ) {
 				$value = 'null';
-			} elseif ( \is_string( $value ) && strpos( trim( $value ), ' ' ) ) {
+			} elseif ( \is_string( $value ) && \strpos( trim( $value ), ' ' ) ) {
 				$value = '"' . trim( $value ) . '"';
 			} elseif ( \is_string( $value ) ) {
 				$value = trim( $value );
