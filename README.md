@@ -19,11 +19,17 @@ After installing via composer:
 1. Commit the SQL dump file
 1. Add some tests!
 
+**Note:** These setup steps only need to be performed once when first adding Lumière to a plugin. After that, by default the plugin will be symlinked and unlinked from your test running site automatically when running tests.
+
+### Commands
+
 For now, tests can be run using standard Codeception commands:
 - `vendor/bin/codecept run admin`
 - `vendor/bin/codecept run frontend`
 - `vendor/bin/codecept run integration`
 - `vendor/bin/codecept run unit`
+
+See the underlying [Codeception commands](https://codeception.com/docs/reference/Commands) for generating new tests, environments, or suites.
 
 ## Details
 
