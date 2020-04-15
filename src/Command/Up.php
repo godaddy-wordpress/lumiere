@@ -29,7 +29,7 @@ class Up extends Init {
 			$input->setArgument( 'template', 'lumiere' );
 		}
 
-		parent::execute( $input, $output );
+		return parent::execute( $input, $output );
 	}
 
 }

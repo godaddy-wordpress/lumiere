@@ -19,7 +19,7 @@ After installing via composer:
 1. Commit the SQL dump file
 1. Add some tests!
 
-**Note:** These setup steps only need to be performed once when first adding Lumière to a plugin. After that, by default the plugin will be symlinked and unlinked from your test running site automatically when running tests.
+> **Note:** These setup steps only need to be performed once when first adding Lumière to a plugin. After that, by default the plugin will be symlinked and unlinked from your test running site automatically when running tests. _However_, if you run into errors after cloning a project where Lumiere was already initialized, you may have to run `lumiere up` again to make sure all configuration files and parameters have been set.
 
 ### Commands
 
