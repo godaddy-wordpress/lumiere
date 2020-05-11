@@ -119,6 +119,7 @@ PHP
 	cd /wordpress
 
 	mkdir -p /project/tests/_data
+	chown www-data.www-data /project/tests/_data
 
 	wp db export /project/tests/_data/dump.sql
 
