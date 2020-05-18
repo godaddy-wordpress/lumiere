@@ -224,7 +224,7 @@ class Lumiere extends Wpbrowser {
 
 		$filename = $this->workDir . DIRECTORY_SEPARATOR . $this->envFileName;
 
-		$this->writeEnvFile( $filename, $installation_data );
+		$this->createEnvFile( $filename, $installation_data );
 
 		$this->toIgnore[] = $this->envFileName;
 
@@ -238,7 +238,7 @@ class Lumiere extends Wpbrowser {
 
 			$filename = $this->workDir . DIRECTORY_SEPARATOR . $this->distEnvFilename;
 
-			$this->writeEnvFile( $filename, $data );
+			$this->createEnvFile( $filename, $data );
 		}
 	}
 
@@ -249,7 +249,7 @@ class Lumiere extends Wpbrowser {
 	 * @param string $filename desired filename
 	 * @param array $data data to write
 	 */
-	public function writeEnvFile( $filename, array $data ) {
+	public function createEnvFile( $filename, array $data ) {
 
 		$lines = [];
 
