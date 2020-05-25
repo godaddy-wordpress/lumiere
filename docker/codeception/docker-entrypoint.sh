@@ -98,6 +98,8 @@ PHP
 
 	wp theme install --activate storefront
 
+	# disable Storefront admin notice
+	wp option set storefront_nux_dismissed yes
 
 	echo "Preparing plugin"
 
