@@ -143,7 +143,7 @@ elif [[ "$1" == start ]]; then
 
 	wp_bootstrap
 
-	# keep the service running...
+	# keep the service running...
 	exec tail -f /dev/null
 
 else
