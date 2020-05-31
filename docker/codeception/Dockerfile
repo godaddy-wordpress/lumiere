@@ -33,6 +33,11 @@ RUN docker-php-ext-install mysqli pdo_mysql
 # Configure php
 RUN echo "date.timezone = UTC" >> /usr/local/etc/php/php.ini
 
+# Install jq
+RUN curl --location -O https://github.com/stedolan/jq/releases/download/jq-1.6/jq-linux64
+RUN chmod +x jq-linux64
+RUN mv jq-linux64 /usr/local/bin/jq
+
 # Install composer
 ENV COMPOSER_ALLOW_SUPERUSER=1
 RUN curl -sS https://getcomposer.org/installer | php -- \
