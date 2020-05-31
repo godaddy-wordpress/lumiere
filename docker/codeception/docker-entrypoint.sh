@@ -1,5 +1,60 @@
 #!/bin/bash
 
+###############################################################################
+# Downloads a private binary release file from GitHub in bash
+#
+# https://gist.github.com/josh-padnick/fdae42c07e648c798fc27dec2367da21
+#
+# Arguments:
+#   GitHub repo owner
+#   GitHub repo name
+#   GitHub tag
+#   Asset filename (uses ${github_repo_name}.${github_tag}.zip as default)
+#   GitHub OAuth token (uses the value $GITHUB_API_KEY as default)
+###############################################################################
+download_github_release() {
+
+	readonly github_repo_owner="$1"
+	readonly github_repo_name="$2"
+	readonly github_tag="$3"
+	readonly asset_filename="${4-${github_repo_name}.${github_tag}.zip}"
+	readonly github_oauth_token="${5-$GITHUB_API_KEY}"
+
+	# Get the "github tag id" of this release
+	github_tag_id=$(curl --silent --show-error \
+	                     --header "Authorization: token $github_oauth_token" \
+		                 --request GET \
+						 "https://api.github.com/repos/$github_repo_owner/$github_repo_name/releases" \
+		                 | jq --raw-output ".[] | select(.tag_name==\"1.17.4\").id")
+
+	# Get the download URL of our desired asset
+	download_url=$(curl --silent --show-error \
+	                    --header "Authorization: token $github_oauth_token" \
+	                    --header "Accept: application/vnd.github.v3.raw" \
+	                    --location \
+	                    --request GET \
+						"https://api.github.com/repos/$github_repo_owner/$github_repo_name/releases/$github_tag_id" \
+	                    | jq --raw-output ".assets[] | select(.name==\"$asset_filename\").url")
+
+	# Get GitHub's S3 redirect URL
+	# Why not just curl's built-in "--location" option to auto-redirect? Because curl then wants to include all the original
+	# headers we added for the GitHub request, which makes AWS complain that we're trying strange things to authenticate.
+	redirect_url=$(curl --silent --show-error \
+	                    --header "Authorization: token $github_oauth_token" \
+	                    --header "Accept: application/octet-stream" \
+	                    --request GET \
+	                    --write-out "%{redirect_url}" \
+	                    "$download_url")
+
+	# Finally download the actual binary
+	curl --silent --show-error \
+	     --header "Accept: application/octet-stream" \
+	     --output "$asset_filename" \
+	     --request GET \
+	     "$redirect_url"
+}
+
+
 wp_bootstrap() {
 
 	WP_DOMAIN=wp.test
