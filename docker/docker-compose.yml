@@ -6,6 +6,7 @@ services:
     depends_on:
       - wordpress
     environment:
+      - GITHUB_API_KEY=$GITHUB_API_KEY
       - WP_CLI_CACHE_DIR=/wordpress/.wp-cli/cache
       - PLUGIN_DIR=$PLUGIN_DIR
     volumes:
