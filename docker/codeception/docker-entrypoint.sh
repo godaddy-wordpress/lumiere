@@ -161,7 +161,14 @@ PHP
 	cd /project
 
 	# install vendor
-	composer install --prefer-dist
+	if [ -e composer.json ]; then
+		composer install --prefer-dist
+	fi
+
+	# add support for projects with a struture similar to woocommerce-memberships-for-teams
+	if [ -e ../composer.json ]; then
+		composer install --prefer-dist --working-dir=..
+	fi
 
 	wp plugin activate $PLUGIN_DIR --path=/wordpress
 
