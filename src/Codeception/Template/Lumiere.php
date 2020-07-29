@@ -186,7 +186,7 @@ class Lumiere extends Wpbrowser {
 		);
 
 		$installation_data['INTEGRATION_DB_PASSWORD'] = $this->ask(
-			'What is the username for the database you\'ll use for integration tests?',
+			'What is the password for the database you\'ll use for integration tests?',
 			getenv( 'INTEGRATION_DB_PASSWORD' ) ?: 'root'
 		);
 
