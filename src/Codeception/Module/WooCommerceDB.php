@@ -28,6 +28,23 @@ class WooCommerceDB extends WPDb {
 
 
 	/**
+	 * Updates the settings for the specified payment gateway.
+	 *
+	 * TODO: move to a trait with PaymentGateway or PaymentGateway\Settings related methods.
+	 *
+	 * @param string $gateway_id the ID of the payment gateway
+	 * @param array $settings the new settings
+	 */
+	public function havePaymentGatewaySettingsInDatabase( string $gateway_id, array $settings ) {
+
+		$setting_name     = sprintf( 'woocommerce_%s_settings', $gateway_id );
+		$current_settings = get_option( $setting_name, [] );
+
+		update_option( $setting_name, array_merge( $current_settings, $settings ) );
+	}
+
+
+	/**
 	 * Creates a simple product in the database.
 	 *
 	 * @param array $props product properties

@@ -115,7 +115,7 @@ class Lumiere extends Wpbrowser {
 
 		$wp_root = $this->ask(
 			'Where is your test instance of WordPress installed?',
-			getenv( 'WP_ROOT_FOLDER' ) ?: '/var/www/wp'
+			getenv( 'WP_ROOT_FOLDER' ) ?: '/wordpress'
 		);
 
 		$installation_data['WP_ROOT_FOLDER'] = $this->normalizePath( $wp_root );
@@ -137,7 +137,7 @@ class Lumiere extends Wpbrowser {
 
 		$installation_data['WP_ADMIN_USERNAME'] = $this->ask(
 			'What is the username for your admin user?',
-			getenv( 'WP_ADMIN_USERNAME' ) ?: 'admin'
+			getenv( 'WP_ADMIN_USERNAME' ) ?: 'password'
 		);
 
 		$installation_data['WP_ADMIN_PASSWORD'] = $this->ask(
@@ -152,7 +152,7 @@ class Lumiere extends Wpbrowser {
 
 		$installation_data['ACCEPTANCE_DB_HOST'] = $this->ask(
 			'What is the host of the database you\'ll use for acceptance tests?',
-			getenv( 'ACCEPTANCE_DB_HOST' ) ?: 'localhost'
+			getenv( 'ACCEPTANCE_DB_HOST' ) ?: 'mysql'
 		);
 
 		$installation_data['ACCEPTANCE_DB_USER'] = $this->ask(
@@ -170,6 +170,11 @@ class Lumiere extends Wpbrowser {
 			getenv( 'ACCEPTANCE_TABLE_PREFIX' ) ?: 'wp_'
 		);
 
+		$installation_data['SELENIUM_HOST'] = $this->ask(
+			'What is the host of the Selenium server you\'ll use for acceptance tests?',
+			'chrome'
+		);
+
 		$installation_data['INTEGRATION_DB_NAME'] = $this->ask(
 			'What is the name of the database you\'ll use for integration tests?',
 			getenv( 'INTEGRATION_DB_NAME' ) ?: 'integration_tests'
@@ -177,7 +182,7 @@ class Lumiere extends Wpbrowser {
 
 		$installation_data['INTEGRATION_DB_HOST'] = $this->ask(
 			'What is the host of the database you\'ll use for integration tests?',
-			getenv( 'INTEGRATION_DB_HOST' ) ?: 'localhost'
+			getenv( 'INTEGRATION_DB_HOST' ) ?: 'mysql'
 		);
 
 		$installation_data['INTEGRATION_DB_USER'] = $this->ask(
@@ -259,8 +264,10 @@ class Lumiere extends Wpbrowser {
 				$value = $value ? 'true' : 'false';
 			} elseif ( null === $value ) {
 				$value = 'null';
-			} elseif ( \is_string( $value ) ) {
+			} elseif ( \is_string( $value ) && \strpos( trim( $value ), ' ' ) ) {
 				$value = '"' . trim( $value ) . '"';
+			} elseif ( \is_string( $value ) ) {
+				$value = trim( $value );
 			} else {
 				continue;
 			}
