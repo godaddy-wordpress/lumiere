@@ -55,7 +55,7 @@ abstract class CreditCardCest extends AcceptanceBase {
 
 		$this->place_order( $checkout_page );
 
-		$this->tester->waitForElementVisible( '.woocommerce-order-details' );
+		$this->tester->waitForElementVisible( '.woocommerce-order-details', 30 );
 		$this->tester->see( 'Order received', '.entry-title' );
 	}
 
