@@ -137,12 +137,12 @@ class Lumiere extends Wpbrowser {
 
 		$installation_data['WP_ADMIN_USERNAME'] = $this->ask(
 			'What is the username for your admin user?',
-			getenv( 'WP_ADMIN_USERNAME' ) ?: 'password'
+			getenv( 'WP_ADMIN_USERNAME' ) ?: 'admin'
 		);
 
 		$installation_data['WP_ADMIN_PASSWORD'] = $this->ask(
 			'What is the password for your admin user?',
-			getenv( 'WP_ADMIN_PASSWORD' ) ?: 'admin'
+			getenv( 'WP_ADMIN_PASSWORD' ) ?: 'password'
 		);
 
 		$installation_data['ACCEPTANCE_DB_NAME'] = $this->ask(
