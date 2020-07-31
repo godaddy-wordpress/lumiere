@@ -97,4 +97,14 @@ abstract class CreditCardCest extends AcceptanceBase {
 	}
 
 
+	/**
+	 * Waits 30 seconds to see the Order received message.
+	 */
+	protected function see_order_received() {
+
+		$this->tester->waitForElementVisible( '.woocommerce-order-details', 30 );
+		$this->tester->see( 'Order received', '.entry-title' );
+	}
+
+
 }
