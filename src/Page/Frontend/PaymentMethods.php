@@ -79,7 +79,7 @@ class PaymentMethods {
 	 */
 	public function seePaymentMethod( int $token_id ) {
 
-		$selector = str_replace( '{token_id}', $token_id, PaymentMethods::SELECTOR_PAYMENT_METHOD_ROW );
+		$selector = $this->getPaymentMethodRowSelector( $token_id );
 
 		$this->tester->waitForElementVisible( $selector );
 		$this->tester->seeElement( $selector );
