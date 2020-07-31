@@ -2,26 +2,60 @@
 Lumiere is designed to get a functioning test suite up and running with minimal plugin-level configuration. The majority of the options defined in Codeception's `.yml` configuration files is the same for all plugins, so this consolidates them into a set of [shared configurations](configs). Improvements can be inherited by all plugins with a composer update.
 
 ### Prerequisites
-- A fresh and isolated WordPress installation. **IMPORTANT:** <u>Do not use this installation for any other purpose, including performing manual tests. It should be reserved to acceptance tests</u>. Any changes might cause a problem with the test suite; any tests run by the suite might be destructive of the changes you made as well. To run manual tests you should dedicate a different installation.
-- [Selenium](https://www.seleniumhq.org/download/) for acceptance tests
+- [Docker](https://docs.docker.com/get-docker/) Lumiere includes a [docker-compose](docker/docker-compose.yml) file to define a series of services that can be used to run all test suites
+- A fresh and isolated WordPress installation if you don't want to use Docker. **IMPORTANT:** <u>Do not use this installation for any other purpose, including performing manual tests. It should be reserved to acceptance tests</u>. Any changes might cause a problem with the test suite; any tests run by the suite might be destructive of the changes you made as well. To run manual tests you should dedicate a different installation.
+- [Selenium](https://www.seleniumhq.org/download/) for acceptance tests without Docker
 
 ### New installation
 After installing via composer:
 1. `$ vendor/bin/lumiere up`
-1. Answer a series of configuration questions about your local WordPress installation(s).
+1. Answer a series of configuration questions about your local WordPress installation(s) &mdash; the defaults work out of the box with the Docker services
 1. Commit all of the resulting generated files. Local files will already be ignored when appropriate.
+
+> **Note:** These setup steps only need to be performed once when first adding Lumière to a plugin. After that, by default the plugin will be symlinked and unlinked from your test running site automatically when running tests. _However_, if you run into errors after cloning a project where Lumiere was already initialized, you may have to run `lumiere up` again to make sure all configuration files and parameters have been set.
+
+If you are using the Docker environment:
+
+1. Remove existing services:
+    `docker-compose -f vendor/skyverge/lumiere/docker/docker-compose.yml -f docker-compose.yml --env-file=.env.lumiere.dist --project-name=lumiere down --volumes`
+1. Bootstrap fresh services:
+    `docker-compose -f vendor/skyverge/lumiere/docker/docker-compose.yml -f docker-compose.yml --env-file=.env.lumiere.dist --project-name=lumiere run --rm codeception bootstrap`
+
+If you are using a fresh WordPress installation:
+
 1. `cd` or SSH into your local WordPress installation:
 1. If WooCommerce is not already installed, `$ wp plugin install woocommerce --activate`
 1. Copy a build of your plugin to the WordPress install
 1. Activate the plugin: `$ wp plugin activate {your-plugin-slug}`
 1. Make any further database changes that the plugin requires for _every_ acceptance test, e.g. enabling pretty permalinks
 1. Dump the database: `$ wp db export path/to/your/plugin/repo/tests/_data/dump.sql`
-1. Commit the SQL dump file
-1. Add some tests!
 
-> **Note:** These setup steps only need to be performed once when first adding Lumière to a plugin. After that, by default the plugin will be symlinked and unlinked from your test running site automatically when running tests. _However_, if you run into errors after cloning a project where Lumiere was already initialized, you may have to run `lumiere up` again to make sure all configuration files and parameters have been set.
+Now add some tests!
 
 ### Commands
+
+#### Docker
+
+The following commands can be used to run tests:
+
+- `docker-compose -f vendor/skyverge/lumiere/docker/docker-compose.yml -f docker-compose.yml --env-file=.env.lumiere.dist --project-name=lumiere run --workdir /wordpress/wp-content/plugins/{plugin_dir} --rm codeception vendor/bin/codecept run admin`
+- `docker-compose -f vendor/skyverge/lumiere/docker/docker-compose.yml -f docker-compose.yml --env-file=.env.lumiere.dist --project-name=lumiere run --workdir /wordpress/wp-content/plugins/{plugin_dir} --rm codeception vendor/bin/codecept run frontend`
+- `docker-compose -f vendor/skyverge/lumiere/docker/docker-compose.yml -f docker-compose.yml --env-file=.env.lumiere.dist --project-name=lumiere run --workdir /wordpress/wp-content/plugins/{plugin_dir} --rm codeception vendor/bin/codecept run integration`
+- `docker-compose -f vendor/skyverge/lumiere/docker/docker-compose.yml -f docker-compose.yml --env-file=.env.lumiere.dist --project-name=lumiere run --workdir /wordpress/wp-content/plugins/{plugin_dir} --rm codeception vendor/bin/codecept run unit`
+
+The following commands can be used to control the Docker environment
+
+- Bootstrap Lumiere services
+
+    `docker-compose -f vendor/skyverge/lumiere/docker/docker-compose.yml -f docker-compose.yml --env-file=.env.lumiere.dist --project-name=lumiere run --rm codeception bootstrap`
+- Stop and remove all containers for Lumiere services
+
+    `docker-compose -f vendor/skyverge/lumiere/docker/docker-compose.yml -f docker-compose.yml --env-file=.env.lumiere.dist --project-name=lumiere down --volumes`
+- Access a bash shell in the container
+
+    `docker-compose -f vendor/skyverge/lumiere/docker/docker-compose.yml -f docker-compose.yml --env-file=.env.lumiere.dist --project-name=lumiere run --rm codeception /bin/bash`
+
+#### Other
 
 For now, tests can be run using standard Codeception commands:
 - `vendor/bin/codecept run admin`
@@ -74,6 +108,42 @@ Each generated test suite has its own set of configuration files.
 - `.env.lumiere.dist`
     - Holds all variables that are specific to the plugin and should also be available for everyone running the test suite
     - Should be committed
+- `docker-compose.yml`
+    - Extends the `docker-compose.yml` file included in Lumiere to map plugin's source code the appropriate directories inside the container
+
+    The following file should work for most plugins:
+
+    ```docker-compose
+    version: '2'
+
+    services:
+    codeception:
+        volumes:
+        - $PWD:/project
+        - $PWD:/wordpress/wp-content/plugins/$PLUGIN_DIR
+
+    wordpress:
+        volumes:
+        - $PWD:/var/www/html/wp-content/plugins/$PLUGIN_DIR
+    ```
+
+
+- `wp-bootstrap.sh`
+    - A bash script that is sourced while the `codeception` service is being configured and can be used to customize the WordPress installation with WP CLI.
+
+    Here is an example file:
+
+    ```bash
+    source .env.lumiere # define TEST_MERCHANT_ID and TEST_API_PASSCODE
+
+    cd /wordpress
+
+    wp wc payment_gateway update bambora_credit_card --enabled=true --user=admin
+
+    wp option patch insert woocommerce_bambora_credit_card_settings debug_mode "log"
+    wp option patch insert woocommerce_bambora_credit_card_settings test_merchant_id "$TEST_MERCHANT_ID"
+    wp option patch insert woocommerce_bambora_credit_card_settings test_api_passcode "$TEST_API_PASSCODE"
+    ```
     
 ### Modules
 
@@ -83,3 +153,20 @@ A wrapper for WPDb, this provides common methods that are often used in acceptan
 #### [WooCommerceBrowser](src/Codeception/Module/WooCommerceBrowser.php)
 A wrapper for WPWebDriver, this adds common methods for various WooCommerce-related acceptance test actions like going directly to the card or product pages.
 
+### Payment Gateway Tests
+
+Lumiere includes a collection of abstract Cest classes that implement tests for common payment gateway operations. To run those tests, plugins should add new Cest to the plugin `frontend` or `admin` test suites, extend one of the shared Cest classes, and implement the abstract methods.
+
+#### [CreditCardCest](src/Tests/Frontend/PaymentGateways/CreditCardCest.php)
+An abstract Cest with common tests for credit card transactions (without tokenization). It includes tests that:
+
+- Confirm the custom name of the payment gateway is displayed
+- Place an order for a shippable product
+
+#### [CreditCardTokenizationCest](src/Tests/Frontend/PaymentGateways/CreditCardTokenizationCest.php)
+An abstract Cest with common tests for credit card tokenization transactions. It includes all tests from `CreditCardCest` and tests that:
+
+- Place an order saving the payment method and using it again to place another order
+- Place an order saving the payment method and checking that it shows up in the payment methods table
+- Edit the nickname of a payment method in the Payment Methods page
+- Delete a payment method from the Payment Methods page
