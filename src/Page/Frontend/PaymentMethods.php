@@ -21,7 +21,7 @@ class PaymentMethods {
 	const SELECTOR_PAYMENT_METHOD_ROW = "//tr[contains(concat(' ', normalize-space(@class), ' '), ' payment-method ')][descendant::input[@name = 'token-id' and @value = {token_id}]]";
 
 
-    /** @var WPWebDriver|Actor our tester */
+	/** @var WPWebDriver|Actor our tester */
 	protected $tester;
 
 
@@ -30,20 +30,20 @@ class PaymentMethods {
 	 *
 	 * @param WPWebDriver|Actor $I tester instance
 	 */
-    public function __construct( \FrontendTester $I ) {
+	public function __construct( \FrontendTester $I ) {
 
-        $this->tester = $I;
+		$this->tester = $I;
 	}
 
 
-    /**
+	/**
 	 * Returns the URL to the Payment Methods page.
 	 *
 	 * @return string
-     */
-    public static function route() {
+	 */
+	public static function route() {
 
-        return self::URL;
+		return self::URL;
 	}
 
 
