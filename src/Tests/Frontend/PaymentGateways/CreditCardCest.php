@@ -29,7 +29,11 @@ abstract class CreditCardCest extends AcceptanceBase {
 	}
 
 
-    public function try_custom_name_is_shown( Product $single_product_page, Checkout $checkout_page ) {
+	/**
+	 * @param Product $single_product_page Product page object
+	 * @param Checkout $checkout_page Checkout page object
+	 */
+	public function try_custom_name_is_shown( Product $single_product_page, Checkout $checkout_page ) {
 
 		$this->tester->havePaymentGatewaySettingsInDatabase( $this->get_payment_gateway_id(), [ 'title' => 'My Credit Card' ] );
 
@@ -43,6 +47,10 @@ abstract class CreditCardCest extends AcceptanceBase {
 	}
 
 
+	/**
+	 * @param Product $single_product_page Product page object
+	 * @param Checkout $checkout_page Checkout page object
+	 */
 	public function try_successful_transaction_for_shippable_product( Product $single_product_page, Checkout $checkout_page ) {
 
 		$this->tester->amOnPage( Product::route( $this->shippable_product ) );
