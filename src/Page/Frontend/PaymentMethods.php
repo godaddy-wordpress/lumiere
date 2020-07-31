@@ -4,6 +4,7 @@ namespace SkyVerge\Lumiere\Page\Frontend;
 
 use Codeception\Actor;
 use Codeception\Module\WPWebDriver;
+use Codeception\Util\Locator;
 
 /**
  * Payment Methods page object.
@@ -97,6 +98,21 @@ class PaymentMethods {
 
 		$this->tester->waitForElementNotVisible( $selector );
 		$this->tester->dontSeeElement( $selector );
+	}
+
+
+	/**
+	 * Checks that the payment method has the specified nickname.
+	 * 
+	 * @param int $token_id the payment method ID
+	 * @param string $nickname nickname for the payment method
+	 */
+	public function seePaymentMethodNickname( int $token_id, string $nickname ) {
+
+		$selector = $this->getPaymentMethodElementSelector( $token_id, Locator::contains( 'div', $nickname ) );
+
+		$this->tester->waitForElementVisible( $selector );
+		$this->tester->seeElement( $selector );
 	}
 
 
