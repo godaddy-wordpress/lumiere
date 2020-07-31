@@ -48,6 +48,18 @@ class PaymentMethods {
 
 
 	/**
+	 * Gets the selector for payment method row in the Payment Methods table.
+	 *
+	 * @param int $token_id the payment method ID
+	 * @return string
+	 */
+	public function getPaymentMethodRowSelector( int $token_id ) {
+
+		return str_replace( '{token_id}', $token_id, self::SELECTOR_PAYMENT_METHOD_ROW );
+	}
+
+
+	/**
 	 * Checks that a payment method row is visible the Payment Methods table
 	 *
 	 * @param int $token_id the payment method ID
