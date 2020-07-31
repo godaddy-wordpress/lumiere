@@ -91,7 +91,7 @@ abstract class CreditCardCest extends AcceptanceBase {
 	 */
 	protected function place_order( Checkout $checkout_page ) {
 
-		$this->tester->click( Checkout::BUTTON_PLACE_ORDER );
+		$this->tester->tryToClick( Checkout::BUTTON_PLACE_ORDER );
 	}
 
 
