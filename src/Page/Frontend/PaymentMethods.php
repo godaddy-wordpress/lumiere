@@ -60,6 +60,19 @@ class PaymentMethods {
 
 
 	/**
+	 * Builds a selector for an element inside a payment method row.
+	 *
+	 * @param int $token_id the payment method ID
+	 * @param string $selector child element selector
+	 * @return string
+	 */
+	public function getPaymentMethodElementSelector( int $token_id, $selector ) {
+
+		return sprintf( "%s//%s", $this->getPaymentMethodRowSelector( $token_id ), $selector );
+	}
+
+
+	/**
 	 * Checks that a payment method row is visible the Payment Methods table
 	 *
 	 * @param int $token_id the payment method ID
