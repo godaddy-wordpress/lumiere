@@ -173,7 +173,7 @@ abstract class CreditCardCest extends PaymentGatewaysBase {
 	 */
 	protected function see_tokenize_payment_method( int $token_id, PaymentMethods $payment_methods_page ) {
 
-		$payment_methods_page->seeTokenizedPaymentMethod( $token_id );
+		$payment_methods_page->seePaymentMethod( $token_id );
 	}
 
 

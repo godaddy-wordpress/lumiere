@@ -52,7 +52,7 @@ class PaymentMethods {
 	 *
 	 * @param int $token_id the payment method ID
 	 */
-	public function seeTokenizedPaymentMethod( int $token_id ) {
+	public function seePaymentMethod( int $token_id ) {
 
 		$selector = str_replace( '{token_id}', $token_id, PaymentMethods::SELECTOR_PAYMENT_METHOD_ROW );
 
