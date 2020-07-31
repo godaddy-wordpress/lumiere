@@ -7,9 +7,8 @@ use Codeception\Module\WPWebDriver;
 use SkyVerge\Lumiere\Page\Frontend\Product;
 use SkyVerge\Lumiere\Page\Frontend\Checkout;
 use SkyVerge\Lumiere\Page\Frontend\PaymentMethods;
-use SkyVerge\Lumiere\Tests\AcceptanceBase;
 
-abstract class CreditCardCest extends AcceptanceBase {
+abstract class CreditCardCest extends PaymentGatewaysBase {
 
 
 	/** @var \WC_Product_Simple a shippable product */
@@ -226,25 +225,4 @@ abstract class CreditCardCest extends AcceptanceBase {
 
 		return str_replace( [ '{payment_gateway_id}', '{token_id}' ], [ $this->get_payment_gateway()->get_id_dasherized(), $token_id ], Checkout::FIELD_SAVED_PAYMENT_METHOD );
 	}
-
-
-	/**
-	 * Gets the payment gateway instance.
-	 *
-	 * @return object
-	 */
-	protected abstract function get_payment_gateway();
-
-
-	/**
-	 * Gets the ID of the payment gateway being tested.
-	 *
-	 * @return string
-	 */
-	protected function get_payment_gateway_id() {
-
-		return $this->get_payment_gateway()->get_id();
-	}
-
-
 }
