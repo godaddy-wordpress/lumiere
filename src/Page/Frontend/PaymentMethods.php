@@ -116,5 +116,24 @@ class PaymentMethods {
 	}
 
 
+	/**
+	 * Performs the steps to set the nickname for the given payment method.
+	 *
+	 * @param int $token_id the payment method ID
+	 * @param string $nickname nickname for the payment method
+	 */
+	public function setPaymentMethodNickname( int $token_id, string $nickname ) {
+
+		// click the Edit button
+		$this->tester->tryToClick( $this->getPaymentMethodElementSelector( $token_id, "a[contains(concat(' ', normalize-space(@class), ' '), ' edit ')]" ) );
+
+		// fill the Nickname field
+		$this->tester->fillField( $this->getPaymentMethodElementSelector( $token_id, "input[@name = 'nickname']" ), $nickname );
+
+		// click the Save button
+		$this->tester->tryToClick( $this->getPaymentMethodElementSelector( $token_id, "a[contains(concat(' ', normalize-space(@class), ' '), ' save ')]" ) );
+	}
+
+
 }
 
