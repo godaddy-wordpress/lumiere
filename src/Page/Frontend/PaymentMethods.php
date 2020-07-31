@@ -86,5 +86,19 @@ class PaymentMethods {
 	}
 
 
+	/**
+	 * Checks that a payment method row is not visible in the Payment Methods table.
+	 *
+	 * @param int $token_id the payment method ID
+	 */
+	public function dontSeePaymentMethod( int $token_id ) {
+
+		$selector = $this->getPaymentMethodRowSelector( $token_id );
+
+		$this->tester->waitForElementNotVisible( $selector );
+		$this->tester->dontSeeElement( $selector );
+	}
+
+
 }
 
