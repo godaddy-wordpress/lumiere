@@ -48,6 +48,21 @@ abstract class CreditCardCest extends AcceptanceBase {
 
 
 	/**
+	 * Adds a shippable product to the cart and redirects to the Checkout page.
+	 *
+	 * @param Product $single_product_page Product page object
+	 */
+	protected function add_shippable_product_to_cart_and_go_to_checkout( Product $single_product_page ) {
+
+		$this->tester->amOnPage( Product::route( $this->shippable_product ) );
+
+		$single_product_page->addSimpleProductToCart( $this->shippable_product );
+
+		$this->tester->amOnPage( Checkout::route() );
+	}
+
+
+	/**
 	 * @param Product $single_product_page Product page object
 	 * @param Checkout $checkout_page Checkout page object
 	 */
