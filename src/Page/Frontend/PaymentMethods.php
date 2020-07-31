@@ -135,5 +135,21 @@ class PaymentMethods {
 	}
 
 
+	/**
+	 * Performs the steps to delete a payment method.
+	 *
+	 * @param int $token_id the payment method ID
+	 */
+	public function deletePaymentMethod( int $token_id ) {
+
+		// click the Delete button
+		$this->tester->tryToClick( $this->getPaymentMethodElementSelector( $token_id, "a[contains(concat(' ', normalize-space(@class), ' '), ' delete ')]" ) );
+
+		$this->tester->acceptPopup();
+
+		$this->tester->waitForText( 'Payment method deleted.' );
+	}
+
+
 }
 
