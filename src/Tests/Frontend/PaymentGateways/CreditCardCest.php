@@ -74,14 +74,6 @@ abstract class CreditCardCest extends AcceptanceBase {
 
 
 	/**
-	 * Gets the ID of the payment gateway being tested.
-	 *
-	 * @return string
-	 */
-	protected abstract function get_payment_gateway_id();
-
-
-	/**
 	 * Performs the necessary steps to place a new order from the Checkout page.
 	 *
 	 * Normally clicking the Place Order button is the only necessary step.
@@ -102,6 +94,25 @@ abstract class CreditCardCest extends AcceptanceBase {
 
 		$this->tester->waitForElementVisible( '.woocommerce-order-details', 30 );
 		$this->tester->see( 'Order received', '.entry-title' );
+	}
+
+
+	/**
+	 * Gets the payment gateway instance.
+	 *
+	 * @return object
+	 */
+	protected abstract function get_payment_gateway();
+
+
+	/**
+	 * Gets the ID of the payment gateway being tested.
+	 *
+	 * @return string
+	 */
+	protected function get_payment_gateway_id() {
+
+		return $this->get_payment_gateway()->get_id();
 	}
 
 
