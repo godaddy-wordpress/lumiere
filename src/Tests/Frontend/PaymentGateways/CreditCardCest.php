@@ -179,6 +179,56 @@ abstract class CreditCardCest extends AcceptanceBase {
 
 
 	/**
+	 * @param Product $single_product_page Product page object
+	 * @param Checkout $checkout_page Checkout page object
+	 * @param PaymentMethods $payment_methods_page Payment Methods page object
+	 */
+	public function try_successful_transaction_for_shippable_product_with_saved_payment_method( Product $single_product_page, Checkout $checkout_page, PaymentMethods $payment_methods_page ) {
+
+		$this->tester->loginAsAdmin();
+
+		// place an order and save the payment method
+		$this->add_shippable_product_to_cart_and_go_to_checkout( $single_product_page );
+
+		$checkout_page->fillBillingDetails();
+
+		$this->place_order_and_tokenize_payment_method( $checkout_page );
+		$this->see_order_received();
+
+		// place an order using the saved payment method
+		$this->add_shippable_product_to_cart_and_go_to_checkout( $single_product_page );
+
+		$checkout_page->fillBillingDetails();
+
+		$this->place_order_using_tokenized_payment_method( $this->get_tokenized_payment_method_id(), $checkout_page );
+		$this->see_order_received();
+	}
+
+
+	/**
+	 * Places an order using a saved payment method.
+	 *
+	 * @param Checkout $checkout_page Checkout page object
+	 */
+	protected function place_order_using_tokenized_payment_method( int $token_id, Checkout $checkout_page ) {
+
+		$this->tester->tryToSelectOption( $this->get_saved_payment_method_selector( $token_id ), $token_id );
+		$this->tester->tryToClick( Checkout::BUTTON_PLACE_ORDER );
+	}
+
+
+	/**
+	 * Gets the selector for a saved payment method.
+	 *
+	 * @param int $token_id payment token ID
+	 */
+	protected function get_saved_payment_method_selector( int $token_id ) {
+
+		return str_replace( [ '{payment_gateway_id}', '{token_id}' ], [ $this->get_payment_gateway()->get_id_dasherized(), $token_id ], Checkout::FIELD_SAVED_PAYMENT_METHOD );
+	}
+
+
+	/**
 	 * Gets the payment gateway instance.
 	 *
 	 * @return object
