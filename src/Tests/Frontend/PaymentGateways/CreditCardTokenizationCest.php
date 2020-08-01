@@ -55,7 +55,7 @@ abstract class CreditCardTokenizationCest extends CreditCardCest {
 	 */
 	protected function check_tokenize_payment_method_field( Checkout $checkout_page ) {
 
-		$this->tester->tryToCheckOption( str_replace( '{payment_gateway_id}', $this->get_payment_gateway_id(), Checkout::FIELD_TOKENIZE_PAYMENT_METHOD ) );
+		$this->tester->tryToCheckOption( str_replace( '{gateway_id}', $this->get_gateway_id(), Checkout::FIELD_TOKENIZE_PAYMENT_METHOD ) );
 	}
 
 
@@ -69,7 +69,7 @@ abstract class CreditCardTokenizationCest extends CreditCardCest {
 		// TODO: get the admin username from the configuration and make the test user configurable {WV 2020-07-30}
 		$user_id = $this->tester->grabUserIdFromDatabase( 'admin' );
 
-		return $this->tester->grabPaymentTokenIdFromDatabase( [ 'user_id' => $user_id, 'gateway_id' => $this->get_payment_gateway_id() ] );
+		return $this->tester->grabPaymentTokenIdFromDatabase( [ 'user_id' => $user_id, 'gateway_id' => $this->get_gateway_id() ] );
 	}
 
 
@@ -131,7 +131,7 @@ abstract class CreditCardTokenizationCest extends CreditCardCest {
 	 */
 	protected function get_saved_payment_method_selector( int $token_id ) {
 
-		return str_replace( [ '{payment_gateway_id}', '{token_id}' ], [ $this->get_payment_gateway()->get_id_dasherized(), $token_id ], Checkout::FIELD_SAVED_PAYMENT_METHOD );
+		return str_replace( [ '{gateway_id}', '{token_id}' ], [ $this->get_gateway()->get_id_dasherized(), $token_id ], Checkout::FIELD_SAVED_PAYMENT_METHOD );
 	}
 
 

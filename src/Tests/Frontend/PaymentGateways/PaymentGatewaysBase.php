@@ -12,7 +12,7 @@ abstract class PaymentGatewaysBase extends AcceptanceBase {
 	 *
 	 * @return object
 	 */
-	protected abstract function get_payment_gateway();
+	protected abstract function get_gateway();
 
 
 	/**
@@ -20,9 +20,9 @@ abstract class PaymentGatewaysBase extends AcceptanceBase {
 	 *
 	 * @return string
 	 */
-	protected function get_payment_gateway_id() {
+	protected function get_gateway_id() {
 
-		return $this->get_payment_gateway()->get_id();
+		return $this->get_gateway()->get_id();
 	}
 
 

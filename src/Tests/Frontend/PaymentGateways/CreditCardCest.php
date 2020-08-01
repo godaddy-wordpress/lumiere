@@ -34,11 +34,11 @@ abstract class CreditCardCest extends PaymentGatewaysBase {
 	 */
 	public function try_custom_name_is_shown( Product $single_product_page, Checkout $checkout_page ) {
 
-		$this->tester->havePaymentGatewaySettingsInDatabase( $this->get_payment_gateway_id(), [ 'title' => 'My Credit Card' ] );
+		$this->tester->havePaymentGatewaySettingsInDatabase( $this->get_gateway_id(), [ 'title' => 'My Credit Card' ] );
 
 		$this->add_shippable_product_to_cart_and_go_to_checkout( $single_product_page );
 
-		$checkout_page->seePaymentMethodTitle( $this->get_payment_gateway_id(), 'My Credit Card' );
+		$checkout_page->seePaymentMethodTitle( $this->get_gateway_id(), 'My Credit Card' );
 	}
 
 
