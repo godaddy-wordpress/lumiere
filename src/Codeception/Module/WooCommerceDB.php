@@ -72,13 +72,18 @@ class WooCommerceDB extends WPDb {
 	 * Gets the ID of the first payment token in the database that matches the given criteria.
 	 *
 	 * @param array $args search criteria
-	 * @return int
+	 * @return null|\WC_Payment_Token
 	 */
-	public function grabPaymentTokenIdFromDatabase( $args ) {
+	public function grabPaymentTokenFromDatabase( $args ) {
 
 		$entries = $this->grabAllFromDatabase( $this->grabPrefixedTableNameFor( 'woocommerce_payment_tokens' ), 'token_id', $args );
+		$token   = null;
 
-		return $entries ? (int) current( $entries ) : 0;
+		if ( is_array( $entries ) && isset( $entries[0]['token_id'] ) ) {
+			$token = \WC_Payment_Tokens::get( (int) $entries['0']['token_id'] );
+		}
+
+		return $token;
 	}
 
 
