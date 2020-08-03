@@ -18,8 +18,8 @@ class PaymentMethods {
 	/** @var string selector for the Payment Methods table */
 	const SELECTOR_PAYMENT_METHODS_TABLE = '.woocommerce-MyAccount-paymentMethods';
 
-	/** @var string selector for the row for payment method with ID equal to {token_id} */
-	const SELECTOR_PAYMENT_METHOD_ROW = "//tr[contains(concat(' ', normalize-space(@class), ' '), ' payment-method ')][descendant::input[@name = 'token-id' and @value = {token_id}]]";
+	/** @var string selector for the row for payment method with ID equal to {token} */
+	const SELECTOR_PAYMENT_METHOD_ROW = "//tr[contains(concat(' ', normalize-space(@class), ' '), ' payment-method ')][descendant::input[@name = 'token-id' and @value = {token}]]";
 
 
 	/** @var WPWebDriver|Actor our tester */
@@ -51,36 +51,36 @@ class PaymentMethods {
 	/**
 	 * Gets the selector for payment method row in the Payment Methods table.
 	 *
-	 * @param int $token_id the payment method ID
+	 * @param string $token the payment method token
 	 * @return string
 	 */
-	public function getPaymentMethodRowSelector( int $token_id ) {
+	public function getPaymentMethodRowSelector( string $token ) {
 
-		return str_replace( '{token_id}', $token_id, self::SELECTOR_PAYMENT_METHOD_ROW );
+		return str_replace( '{token}', $token, self::SELECTOR_PAYMENT_METHOD_ROW );
 	}
 
 
 	/**
 	 * Builds a selector for an element inside a payment method row.
 	 *
-	 * @param int $token_id the payment method ID
+	 * @param string $token the payment method token
 	 * @param string $selector child element selector
 	 * @return string
 	 */
-	public function getPaymentMethodElementSelector( int $token_id, $selector ) {
+	public function getPaymentMethodElementSelector( string $token, $selector ) {
 
-		return sprintf( "%s//%s", $this->getPaymentMethodRowSelector( $token_id ), $selector );
+		return sprintf( "%s//%s", $this->getPaymentMethodRowSelector( $token ), $selector );
 	}
 
 
 	/**
 	 * Checks that a payment method row is visible the Payment Methods table
 	 *
-	 * @param int $token_id the payment method ID
+	 * @param string $token the payment method token
 	 */
-	public function seePaymentMethod( int $token_id ) {
+	public function seePaymentMethod( string $token ) {
 
-		$selector = $this->getPaymentMethodRowSelector( $token_id );
+		$selector = $this->getPaymentMethodRowSelector( $token );
 
 		$this->tester->waitForElementVisible( $selector );
 		$this->tester->seeElement( $selector );
@@ -90,11 +90,11 @@ class PaymentMethods {
 	/**
 	 * Checks that a payment method row is not visible in the Payment Methods table.
 	 *
-	 * @param int $token_id the payment method ID
+	 * @param string $token the payment method token
 	 */
-	public function dontSeePaymentMethod( int $token_id ) {
+	public function dontSeePaymentMethod( string $token ) {
 
-		$selector = $this->getPaymentMethodRowSelector( $token_id );
+		$selector = $this->getPaymentMethodRowSelector( $token );
 
 		$this->tester->waitForElementNotVisible( $selector );
 		$this->tester->dontSeeElement( $selector );
@@ -103,13 +103,13 @@ class PaymentMethods {
 
 	/**
 	 * Checks that the payment method has the specified nickname.
-	 * 
-	 * @param int $token_id the payment method ID
+	 *
+	 * @param string $token the payment method token
 	 * @param string $nickname nickname for the payment method
 	 */
-	public function seePaymentMethodNickname( int $token_id, string $nickname ) {
+	public function seePaymentMethodNickname( string $token, string $nickname ) {
 
-		$selector = $this->getPaymentMethodElementSelector( $token_id, Locator::contains( 'div', $nickname ) );
+		$selector = $this->getPaymentMethodElementSelector( $token, Locator::contains( 'div', $nickname ) );
 
 		$this->tester->waitForElementVisible( $selector );
 		$this->tester->seeElement( $selector );
@@ -119,31 +119,31 @@ class PaymentMethods {
 	/**
 	 * Performs the steps to set the nickname for the given payment method.
 	 *
-	 * @param int $token_id the payment method ID
+	 * @param string $token the payment method token
 	 * @param string $nickname nickname for the payment method
 	 */
-	public function setPaymentMethodNickname( int $token_id, string $nickname ) {
+	public function setPaymentMethodNickname( string $token, string $nickname ) {
 
 		// click the Edit button
-		$this->tester->tryToClick( $this->getPaymentMethodElementSelector( $token_id, "a[contains(concat(' ', normalize-space(@class), ' '), ' edit ')]" ) );
+		$this->tester->tryToClick( $this->getPaymentMethodElementSelector( $token, "a[contains(concat(' ', normalize-space(@class), ' '), ' edit ')]" ) );
 
 		// fill the Nickname field
-		$this->tester->fillField( $this->getPaymentMethodElementSelector( $token_id, "input[@name = 'nickname']" ), $nickname );
+		$this->tester->fillField( $this->getPaymentMethodElementSelector( $token, "input[@name = 'nickname']" ), $nickname );
 
 		// click the Save button
-		$this->tester->tryToClick( $this->getPaymentMethodElementSelector( $token_id, "a[contains(concat(' ', normalize-space(@class), ' '), ' save ')]" ) );
+		$this->tester->tryToClick( $this->getPaymentMethodElementSelector( $token, "a[contains(concat(' ', normalize-space(@class), ' '), ' save ')]" ) );
 	}
 
 
 	/**
 	 * Performs the steps to delete a payment method.
 	 *
-	 * @param int $token_id the payment method ID
+	 * @param string $token the payment method token
 	 */
-	public function deletePaymentMethod( int $token_id ) {
+	public function deletePaymentMethod( string $token ) {
 
 		// click the Delete button
-		$this->tester->tryToClick( $this->getPaymentMethodElementSelector( $token_id, "a[contains(concat(' ', normalize-space(@class), ' '), ' delete ')]" ) );
+		$this->tester->tryToClick( $this->getPaymentMethodElementSelector( $token, "a[contains(concat(' ', normalize-space(@class), ' '), ' delete ')]" ) );
 
 		$this->tester->acceptPopup();
 

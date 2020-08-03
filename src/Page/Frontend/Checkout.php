@@ -39,7 +39,7 @@ class Checkout {
 	const FIELD_TOKENIZE_PAYMENT_METHOD = '.payment_method_{gateway_id} .js-sv-wc-tokenize-payment';
 
 	/** @var string selector for a saved payment method option */
-	const FIELD_SAVED_PAYMENT_METHOD = '#wc-{gateway_id}-payment-token-{token_id}';
+	const FIELD_SAVED_PAYMENT_METHOD = '#wc-{gateway_id}-payment-token-{token}';
 
 	/** @var string selector for the Place Order button */
 	const BUTTON_PLACE_ORDER = '[name="woocommerce_checkout_place_order"]';
