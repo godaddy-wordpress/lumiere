@@ -52,7 +52,7 @@ class PaymentTokenEditor {
 
 
 	/**
-	 * Returns the URL to the Payment Methods page.
+	 * Returns the URL to the user profile page.
 	 *
 	 * @return string
 	 */
