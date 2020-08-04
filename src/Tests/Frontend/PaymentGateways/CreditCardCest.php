@@ -6,6 +6,7 @@ use Codeception\Actor;
 use Codeception\Module\WPWebDriver;
 use SkyVerge\Lumiere\Page\Frontend\Product;
 use SkyVerge\Lumiere\Page\Frontend\Checkout;
+use SkyVerge\Lumiere\Tests\PaymentGatewaysBase;
 
 abstract class CreditCardCest extends PaymentGatewaysBase {
 

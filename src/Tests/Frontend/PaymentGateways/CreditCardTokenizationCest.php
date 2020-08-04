@@ -2,6 +2,7 @@
 
 namespace SkyVerge\Lumiere\Tests\Frontend\PaymentGateways;
 
+use SkyVerge\Lumiere\Page\Admin\PaymentTokenEditor;
 use SkyVerge\Lumiere\Page\Frontend\Product;
 use SkyVerge\Lumiere\Page\Frontend\Checkout;
 use SkyVerge\Lumiere\Page\Frontend\PaymentMethods;
@@ -176,6 +177,29 @@ abstract class CreditCardTokenizationCest extends CreditCardCest {
 		$this->tester->reloadPage();
 
 		$payment_methods_page->dontSeePaymentMethod( $token );
+	}
+
+
+	/**
+	 * @param Product $single_product_page Product page object
+	 * @param Checkout $checkout_page Checkout page object
+	 * @param PaymentTokenEditor $token_editor Payment Token Editor page object
+	 */
+	public function try_seeing_a_saved_payment_method_in_the_payment_tokens_editor( Product $single_product_page, Checkout $checkout_page, PaymentTokenEditor $token_editor ) {
+
+		$this->tester->loginAsAdmin();
+
+		$this->add_shippable_product_to_cart_and_go_to_checkout( $single_product_page );
+
+		$checkout_page->fillBillingDetails();
+
+		// place an order and save the payment method
+		$this->place_order_and_tokenize_payment_method( $checkout_page );
+		$this->see_order_received();
+
+		$this->tester->amOnPage( PaymentTokenEditor::route( 1 ) );
+
+		$token_editor->seePaymentToken( $this->get_tokenized_payment_method_token() );
 	}
 
 
