@@ -12,7 +12,7 @@ use Codeception\Util\Locator;
 class PaymentMethods {
 
 
-	/** @var string default URL for the Checkout page */
+	/** @var string default URL for the Payment methods page */
 	const URL = '/my-account/payment-methods/';
 
 	/** @var string selector for the Payment Methods table */
@@ -152,4 +152,3 @@ class PaymentMethods {
 
 
 }
-
