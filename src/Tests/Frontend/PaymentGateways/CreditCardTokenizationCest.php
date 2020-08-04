@@ -207,7 +207,8 @@ abstract class CreditCardTokenizationCest extends CreditCardCest {
 		$this->tester->amOnPage( PaymentTokenEditor::route( 1 ) );
 
 		$user_profile_page->fillBillingDetails();
-		$user_profile_page->saveChanges();
+		$this->tester->tryToClick( 'input[value="Update Profile"]' );
+		$this->tester->waitForText( 'Profile updated.' );
 
 		$this->tester->amOnPage( AddPaymentMethod::route() );
 
