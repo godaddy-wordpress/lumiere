@@ -203,7 +203,7 @@ class PaymentTokenEditor {
 	 */
 	public function seePaymentToken( string $token ) {
 
-		$this->tester->waitForElementVisible( $this->getPaymentTokenSelector( $token ) );
+		$this->tester->waitForElement( $this->getPaymentTokenSelector( $token ) );
 		$this->tester->seeElement( $this->getPaymentTokenSelector( $token ) );
 	}
 
