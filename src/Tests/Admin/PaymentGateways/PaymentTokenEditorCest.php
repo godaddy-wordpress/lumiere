@@ -1,5 +1,7 @@
 <?php
 
+namespace SkyVerge\Lumiere\Tests\Admin\PaymentGateways;
+
 use SkyVerge\Lumiere\Page\Admin\PaymentTokenEditor;
 use SkyVerge\Lumiere\Tests\PaymentGatewaysBase;
 
