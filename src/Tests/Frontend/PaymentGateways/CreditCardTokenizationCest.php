@@ -67,7 +67,7 @@ abstract class CreditCardTokenizationCest extends CreditCardCest {
 	 * Sometimes clicking the Add payment method button is the only necessary step.
 	 * Payment gateways may overwrite this method to perform extra steps, like entering a particular credit card number or test amount.
 	 *
-	 * @param \SkyVerge\Lumiere\Page\Frontend\AddPaymentMethod $add_payment_method_page Add payment method page object
+	 * @param AddPaymentMethod $add_payment_method_page Add payment method page object
 	 */
 	protected function add_payment_method( AddPaymentMethod $add_payment_method_page ) {
 
