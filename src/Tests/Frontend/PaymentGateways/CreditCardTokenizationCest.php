@@ -72,6 +72,8 @@ abstract class CreditCardTokenizationCest extends CreditCardCest {
 	protected function add_payment_method( AddPaymentMethod $add_payment_method_page ) {
 
 		$this->tester->tryToClick( AddPaymentMethod::BUTTON_ADD );
+
+		$this->tester->waitForText( 'Nice! New payment method added' );
 	}
 
 
