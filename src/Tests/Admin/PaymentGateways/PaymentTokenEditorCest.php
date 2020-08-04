@@ -184,4 +184,17 @@ abstract class PaymentTokenEditorCest extends PaymentGatewaysBase {
 	}
 
 
+	/**
+	 * @param PaymentTokenEditor $token_editor Payment Token Editor page object
+	 */
+	public function try_removing_a_payment_token( PaymentTokenEditor $token_editor ) {
+
+		$token = $this->add_new_payment_token( $token_editor );
+
+		$token_editor->scrollToPaymentTokensTable();
+		$token_editor->deletePaymentToken( $token );
+		$token_editor->dontSeePaymentToken( $token );
+	}
+
+
 }
