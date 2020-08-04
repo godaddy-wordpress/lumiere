@@ -234,4 +234,19 @@ class PaymentTokenEditor {
 	}
 
 
+	/**
+	 * Fills the billing fields with default values.
+	 */
+	public function fillBillingDetails() {
+
+		$this->tester->fillField( self::FIELD_BILLING_FIRST_NAME, 'John' );
+		$this->tester->fillField( self::FIELD_BILLING_LAST_NAME,  'Doe' );
+		$this->tester->fillField( self::FIELD_BILLING_ADDRESS_1,  'Ste 2B' );
+		$this->tester->fillField( self::FIELD_BILLING_CITY,       'Boston' );
+		$this->tester->fillField( self::FIELD_BILLING_POSTCODE,   '02115' );
+		$this->tester->fillField( self::FIELD_BILLING_PHONE,      '800-970-1259' );
+		$this->tester->fillField( self::FIELD_BILLING_EMAIL,      'john@example.com' );
+	}
+
+
 }
