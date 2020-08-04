@@ -151,4 +151,37 @@ abstract class PaymentTokenEditorCest extends PaymentGatewaysBase {
 
 
 
+	/**
+	 * @param PaymentTokenEditor $token_editor Payment Token Editor page object
+	 */
+	public function try_marking_a_payment_token_as_default( PaymentTokenEditor $token_editor ) {
+
+		$first_token  = $this->add_new_payment_token( $token_editor );
+		$second_token = $this->add_new_payment_token( $token_editor );
+
+		// confirm that the first token is automatically set as default
+		$token_editor->scrollToPaymentTokensTable();
+		$token_editor->seeDefaultPaymentToken( $this->get_gateway()->get_id(), $first_token );
+
+		$this->select_payment_token_as_default( $second_token, $token_editor );
+		$this->save_payment_token_changes( $token_editor );
+
+		// confirm t hat the second token is now the default
+		$token_editor->scrollToPaymentTokensTable();
+		$token_editor->seeDefaultPaymentToken( $this->get_gateway()->get_id(), $second_token );
+	}
+
+
+	/**
+	 * Selects the given payment token as the default payment token.
+	 *
+	 * @param string $token payment method token
+	 * @param PaymentTokenEditor $token_editor Payment Token Editor page object
+	 */
+	protected function select_payment_token_as_default( string $token, PaymentTokenEditor $token_editor ) {
+
+		$token_editor->selectPaymentTokenAsDefault( $this->get_gateway()->get_id(), $token );
+	}
+
+
 }
