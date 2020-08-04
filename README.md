@@ -12,7 +12,7 @@ After installing via composer:
 1. Answer a series of configuration questions about your local WordPress installation(s) &mdash; the defaults work out of the box with the Docker services
 1. Commit all of the resulting generated files. Local files will already be ignored when appropriate.
 
-> **Note:** These setup steps only need to be performed once when first adding Lumière to a plugin. After that, by default the plugin will be symlinked and unlinked from your test running site automatically when running tests. _However_, if you run into errors after cloning a project where Lumiere was already initialized, you may have to run `lumiere up` again to make sure all configuration files and parameters have been set.
+> **Note:** These setup steps only need to be performed once when first adding Lumiere to a plugin. After that, by default the plugin will be symlinked and unlinked from your test running site automatically when running tests. _However_, if you run into errors after cloning a project where Lumiere was already initialized, you may have to run `lumiere up` again to make sure all configuration files and parameters have been set.
 
 If you are using the Docker environment:
 
