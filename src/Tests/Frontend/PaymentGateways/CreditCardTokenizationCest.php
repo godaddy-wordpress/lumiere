@@ -18,20 +18,20 @@ abstract class CreditCardTokenizationCest extends CreditCardCest {
 
 		$this->tester->loginAsAdmin();
 
-		// place an order and save the payment method
 		$this->add_shippable_product_to_cart_and_go_to_checkout( $single_product_page );
 
 		$checkout_page->fillBillingDetails();
 
+		// place an order and save the payment method
 		$this->place_order_and_tokenize_payment_method( $checkout_page );
 		$this->see_order_received();
 
-		// confirm the payment method is visible in the Payment Methods page
 		$token = $this->get_tokenized_payment_method_token();
 
 		$this->tester->amOnPage( PaymentMethods::route() );
 		$this->tester->waitForElementVisible( PaymentMethods::SELECTOR_PAYMENT_METHODS_TABLE );
 
+		// confirm the payment method is visible in the Payment Methods page
 		$this->see_tokenize_payment_method( $token, $payment_methods_page );
 	}
 
@@ -97,19 +97,19 @@ abstract class CreditCardTokenizationCest extends CreditCardCest {
 
 		$this->tester->loginAsAdmin();
 
-		// place an order and save the payment method
 		$this->add_shippable_product_to_cart_and_go_to_checkout( $single_product_page );
 
 		$checkout_page->fillBillingDetails();
 
+		// place an order and save the payment method
 		$this->place_order_and_tokenize_payment_method( $checkout_page );
 		$this->see_order_received();
 
-		// place an order using the saved payment method
 		$this->add_shippable_product_to_cart_and_go_to_checkout( $single_product_page );
 
 		$checkout_page->fillBillingDetails();
 
+		// place an order using the saved payment method
 		$this->place_order_using_tokenized_payment_method( $this->get_tokenized_payment_method_token(), $checkout_page );
 		$this->see_order_received();
 	}
@@ -148,11 +148,11 @@ abstract class CreditCardTokenizationCest extends CreditCardCest {
 
 		$this->tester->loginAsAdmin();
 
-		// place an order and save the payment method
 		$this->add_shippable_product_to_cart_and_go_to_checkout( $single_product_page );
 
 		$checkout_page->fillBillingDetails();
 
+		// place an order and save the payment method
 		$this->place_order_and_tokenize_payment_method( $checkout_page );
 		$this->see_order_received();
 
