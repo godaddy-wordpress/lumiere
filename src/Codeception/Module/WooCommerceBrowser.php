@@ -29,7 +29,7 @@ class WooCommerceBrowser extends WPWebDriver {
 
 			try {
 
-				$this->wait( 0.5 );
+				$this->waitForJqueryAjax();
 
 				$action();
 
