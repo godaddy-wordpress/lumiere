@@ -35,6 +35,12 @@ class PaymentTokenEditor {
 	/** @var string selector for the Billing Email field */
 	const FIELD_BILLING_EMAIL = '[name="billing_email"]';
 
+	/** @var string selector for the Billing State field */
+	const FIELD_BILLING_STATE = '[name="billing_state"]';
+
+	/** @var string selector for the Billing Country field */
+	const FIELD_BILLING_COUNTRY = '[name="billing_country"]';
+
 	/** @var string selector for the Payment Tokens table */
 	const SELECTOR_PAYMENT_TOKENS_TABLE = '.sv_wc_payment_gateway_token_editor';
 
@@ -260,13 +266,15 @@ class PaymentTokenEditor {
 	 */
 	public function fillBillingDetails() {
 
-		$this->tester->fillField( self::FIELD_BILLING_FIRST_NAME, 'John' );
-		$this->tester->fillField( self::FIELD_BILLING_LAST_NAME,  'Doe' );
-		$this->tester->fillField( self::FIELD_BILLING_ADDRESS_1,  'Ste 2B' );
-		$this->tester->fillField( self::FIELD_BILLING_CITY,       'Boston' );
-		$this->tester->fillField( self::FIELD_BILLING_POSTCODE,   '02115' );
-		$this->tester->fillField( self::FIELD_BILLING_PHONE,      '800-970-1259' );
-		$this->tester->fillField( self::FIELD_BILLING_EMAIL,      'john@example.com' );
+		$this->tester->fillField( self::FIELD_BILLING_FIRST_NAME,  'John' );
+		$this->tester->fillField( self::FIELD_BILLING_LAST_NAME,   'Doe' );
+		$this->tester->fillField( self::FIELD_BILLING_ADDRESS_1,   'Ste 2B' );
+		$this->tester->fillField( self::FIELD_BILLING_CITY,        'Boston' );
+		$this->tester->fillField( self::FIELD_BILLING_POSTCODE,    '02115' );
+		$this->tester->fillField( self::FIELD_BILLING_PHONE,       '800-970-1259' );
+		$this->tester->fillField( self::FIELD_BILLING_EMAIL,       'john@example.com' );
+		$this->tester->selectOption( self::FIELD_BILLING_COUNTRY, 'United States (US)' );
+		$this->tester->selectOption( self::FIELD_BILLING_STATE, 'Massachusetts' );
 	}
 
 
