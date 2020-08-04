@@ -35,6 +35,12 @@ class Checkout {
 	/** @var string selector for the Billing Email field */
 	const FIELD_BILLING_EMAIL = '[name="billing_email"]';
 
+	/** @var string selector for the Securely Save to Account checkbox field */
+	const FIELD_TOKENIZE_PAYMENT_METHOD = '.payment_method_{gateway_id} .js-sv-wc-tokenize-payment';
+
+	/** @var string selector for a saved payment method option */
+	const FIELD_SAVED_PAYMENT_METHOD = '#wc-{gateway_id}-payment-token-{token}';
+
 	/** @var string selector for the Place Order button */
 	const BUTTON_PLACE_ORDER = '[name="woocommerce_checkout_place_order"]';
 
