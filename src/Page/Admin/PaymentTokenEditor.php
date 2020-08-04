@@ -36,7 +36,7 @@ class PaymentTokenEditor {
 	const FIELD_BILLING_EMAIL = '[name="billing_email"]';
 
 	/** @var string selector for the Billing State field */
-	const FIELD_BILLING_STATE = '[name="billing_state"]';
+	const FIELD_BILLING_STATE = 'select[name="billing_state"]';
 
 	/** @var string selector for the Billing Country field */
 	const FIELD_BILLING_COUNTRY = '[name="billing_country"]';
@@ -274,7 +274,10 @@ class PaymentTokenEditor {
 		$this->tester->fillField( self::FIELD_BILLING_PHONE,       '800-970-1259' );
 		$this->tester->fillField( self::FIELD_BILLING_EMAIL,       'john@example.com' );
 		$this->tester->selectOption( self::FIELD_BILLING_COUNTRY, 'United States (US)' );
-		$this->tester->selectOption( self::FIELD_BILLING_STATE, 'Massachusetts' );
+		$this->tester->waitForElement( self::FIELD_BILLING_STATE );
+		// select2 selection
+		$this->executeJS( 'jQuery(' . self::FIELD_BILLING_STATE . ').val("MA").trigger("change")' );
+		$this->waitForJqueryAjax();
 	}
 
 
