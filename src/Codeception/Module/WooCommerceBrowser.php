@@ -80,9 +80,9 @@ class WooCommerceBrowser extends WPWebDriver {
 
 
 	/**
-	 * Attempts to thick a checkbox multiple times.
+	 * Attempts to tick a checkbox multiple times.
 	 *
-	 * The method ignores "Element is not clickable" exceptions and tries to thick the checkbox again.
+	 * The method ignores "Element is not clickable" exceptions and tries to tick the checkbox again.
 	 *
 	 * @param mixed $element the checkbox field
 	 * @param int $attempts number of times to try the action before throwing an exception

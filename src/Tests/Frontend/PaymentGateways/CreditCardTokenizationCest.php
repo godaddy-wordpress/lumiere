@@ -37,7 +37,7 @@ abstract class CreditCardTokenizationCest extends CreditCardCest {
 
 
 	/**
-	 * Places an order and thicks the Securely Save to Account checkbox.
+	 * Places an order and ticks the Securely Save to Account checkbox.
 	 *
 	 * @param Checkout $checkout_page Checkout page object
 	 */
@@ -49,7 +49,7 @@ abstract class CreditCardTokenizationCest extends CreditCardCest {
 
 
 	/**
-	 * Performs the necessary steps to thicks the Securely Save to Account checkbox for the current gateway.
+	 * Performs the necessary steps to tick the Securely Save to Account checkbox for the current gateway.
 	 *
 	 * @param Checkout $checkout_page Checkout page object
 	 */
@@ -180,4 +180,3 @@ abstract class CreditCardTokenizationCest extends CreditCardCest {
 
 
 }
-
