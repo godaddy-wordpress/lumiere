@@ -1,6 +1,6 @@
 <?php
 
-namespace SkyVerge\Lumiere\Tests\Frontend\PaymentGateways;
+namespace SkyVerge\Lumiere\Tests;
 
 use SkyVerge\Lumiere\Tests\AcceptanceBase;
 
