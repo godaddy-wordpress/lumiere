@@ -5,6 +5,7 @@ services:
     build: codeception
     depends_on:
       - wordpress
+      - ngrok
     environment:
       - GITHUB_API_KEY=$GITHUB_API_KEY
       - WP_CLI_CACHE_DIR=/wordpress/.wp-cli/cache
@@ -42,6 +43,13 @@ services:
     ports:
       - "4444:4444"
       - "5900:5900"
+
+  ngrok:
+    build: ngrok
+    env_file:
+      - $PWD/.env.lumiere
+    environment:
+      - NGROK_TOKEN
 
 volumes:
   wordpress:
