@@ -166,7 +166,7 @@ abstract class CreditCardTokenizationCest extends CreditCardCest {
 
 		$this->tester->amOnPage( AddPaymentMethod::route() );
 		$this->add_payment_method( $add_payment_method_page );
-		$this->tester->waitForText( 'Nice! New payment method added' );
+		$this->tester->waitForText( 'New payment method added' );
 
 		$this->tester->amOnPage( PaymentMethods::route() );
 		$token = $this->get_tokenized_payment_method_token();
