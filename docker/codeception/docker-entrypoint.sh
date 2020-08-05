@@ -113,9 +113,23 @@ wp_bootstrap() {
 		wp core config --dbhost=$DB_HOST --dbname=$DB_NAME --dbuser=$DB_USER --dbpass=$DB_PASSWORD --dbprefix=$TABLE_PREFIX --force --extra-php <<'PHP'
 // allows URLs to work while accessing the WordPress service from the host using mapped ports
 if ( 8443 === (int) $_SERVER['SERVER_PORT'] || 8080 === (int) $_SERVER['SERVER_PORT'] ) {
+
 	$protocol = 8443 === (int) $_SERVER['SERVER_PORT'] ? 'https' : 'http';
+
 	define( 'WP_HOME', "{$protocol}://{$_SERVER['HTTP_HOST']}" );
 	define( 'WP_SITEURL', "{$protocol}://{$_SERVER['HTTP_HOST']}" );
+
+// allow URLs to work with ngrok
+} elseif ( isset( $_SERVER['HTTP_X_ORIGINAL_HOST'] ) ) {
+
+	$protocol = isset( $_SERVER['HTTP_X_FORWARDED_PROTO'] ) ? $_SERVER['HTTP_X_FORWARDED_PROTO'] : 'http';
+
+	define( 'WP_HOME', "{$protocol}://{$_SERVER['HTTP_X_ORIGINAL_HOST']}" );
+	define( 'WP_SITEURL', "{$protocol}://{$_SERVER['HTTP_X_ORIGINAL_HOST']}" );
+}
+
+if ( isset( $protocol ) && 'https' === $protocol ) {
+	$_SERVER['HTTPS'] = 'on';
 }
 PHP
 	fi
