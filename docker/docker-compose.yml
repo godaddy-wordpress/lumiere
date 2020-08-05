@@ -50,6 +50,8 @@ services:
       - $PWD/.env.lumiere
     environment:
       - NGROK_TOKEN
+    ports:
+      - "8040:8040"
 
 volumes:
   wordpress:
