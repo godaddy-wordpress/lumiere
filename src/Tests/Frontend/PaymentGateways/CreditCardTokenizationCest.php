@@ -72,8 +72,6 @@ abstract class CreditCardTokenizationCest extends CreditCardCest {
 	protected function add_payment_method( AddPaymentMethod $add_payment_method_page ) {
 
 		$this->tester->tryToClick( AddPaymentMethod::BUTTON_ADD );
-
-		$this->tester->waitForText( 'Nice! New payment method added' );
 	}
 
 
@@ -207,11 +205,10 @@ abstract class CreditCardTokenizationCest extends CreditCardCest {
 		$this->tester->loginAsAdmin();
 
 		$this->tester->amOnPage( AddPaymentMethod::route() );
-
 		$this->add_payment_method( $add_payment_method_page );
+		$this->tester->waitForText( 'Nice! New payment method added' );
 
 		$this->tester->amOnPage( PaymentMethods::route() );
-
 		$token = $this->get_tokenized_payment_method_token();
 		$payment_methods_page->seePaymentMethod( $token );
 	}
