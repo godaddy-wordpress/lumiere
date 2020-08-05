@@ -14,33 +14,6 @@ class PaymentTokenEditor {
 	/** @var string base URL for the user profile page */
 	const URL = '/wp-admin/user-edit.php?user_id={user_id}';
 
-	/** @var string selector for the Billing First Name field */
-	const FIELD_BILLING_FIRST_NAME = '[name="billing_first_name"]';
-
-	/** @var string selector for the Billing Last Name field */
-	const FIELD_BILLING_LAST_NAME = '[name="billing_last_name"]';
-
-	/** @var string selector for the Billing Address field */
-	const FIELD_BILLING_ADDRESS_1 = '[name="billing_address_1"]';
-
-	/** @var string selector for the Billing City field */
-	const FIELD_BILLING_CITY = '[name="billing_city"]';
-
-	/** @var string selector for the Billing Postcode field */
-	const FIELD_BILLING_POSTCODE = '[name="billing_postcode"]';
-
-	/** @var string selector for the Billing Phone field */
-	const FIELD_BILLING_PHONE = '[name="billing_phone"]';
-
-	/** @var string selector for the Billing Email field */
-	const FIELD_BILLING_EMAIL = '[name="billing_email"]';
-
-	/** @var string selector for the Billing State field */
-	const FIELD_BILLING_STATE = 'select[name="billing_state"]';
-
-	/** @var string selector for the Billing Country field */
-	const FIELD_BILLING_COUNTRY = '[name="billing_country"]';
-
 	/** @var string selector for the Payment Tokens table */
 	const SELECTOR_PAYMENT_TOKENS_TABLE = '.sv_wc_payment_gateway_token_editor';
 
@@ -258,26 +231,6 @@ class PaymentTokenEditor {
 		$this->seePaymentToken( $token );
 
 		$this->tester->seeOptionIsSelected( $this->getDefaultPaymentTokenFieldSelector( $gateway_id ), $token );
-	}
-
-
-	/**
-	 * Fills the billing fields with default values.
-	 */
-	public function fillBillingDetails() {
-
-		$this->tester->fillField( self::FIELD_BILLING_FIRST_NAME,  'John' );
-		$this->tester->fillField( self::FIELD_BILLING_LAST_NAME,   'Doe' );
-		$this->tester->fillField( self::FIELD_BILLING_ADDRESS_1,   'Ste 2B' );
-		$this->tester->fillField( self::FIELD_BILLING_CITY,        'Boston' );
-		$this->tester->fillField( self::FIELD_BILLING_POSTCODE,    '02115' );
-		$this->tester->fillField( self::FIELD_BILLING_PHONE,       '800-970-1259' );
-		$this->tester->fillField( self::FIELD_BILLING_EMAIL,       'john@example.com' );
-		$this->tester->selectOption( self::FIELD_BILLING_COUNTRY, 'United States (US)' );
-		$this->tester->waitForElement( self::FIELD_BILLING_STATE );
-		// select2 selection
-		$this->executeJS( 'jQuery(' . self::FIELD_BILLING_STATE . ').val("MA").trigger("change")' );
-		$this->waitForJqueryAjax();
 	}
 
 
