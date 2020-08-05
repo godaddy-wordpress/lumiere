@@ -38,18 +38,4 @@ abstract class CreditCardCest extends PaymentGatewaysBase {
 	}
 
 
-	/**
-	 * Performs the necessary steps to place a new order from the Checkout page.
-	 *
-	 * Normally clicking the Place Order button is the only necessary step.
-	 * Payment gateways may overwrite this method to perform extra steps, like entering a particular credit card number or test amount.
-	 *
-	 * @param Checkout $checkout_page Checkout page object
-	 */
-	protected function place_order( Checkout $checkout_page ) {
-
-		$this->tester->tryToClick( Checkout::BUTTON_PLACE_ORDER );
-	}
-
-
 }
