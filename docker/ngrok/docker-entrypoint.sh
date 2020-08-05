@@ -7,7 +7,7 @@ if [[ "$1" == start ]]; then
 	fi
 
 	if [[ '' != "$NGROK_SUBDOMAIN" ]]; then
-		exec ngrok http --log=stdout --subdomain=$NGROK_SUBDOMAIN --host-header=rewrite https://wp.test > /dev/null
+		exec ngrok http --log=stdout --subdomain=$NGROK_SUBDOMAIN --host-header=rewrite https://wp.test
 	fi
 
 else
