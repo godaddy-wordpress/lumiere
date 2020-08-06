@@ -3,6 +3,7 @@
 namespace SkyVerge\Lumiere\Tests\Frontend\PaymentGateways;
 
 use SkyVerge\Lumiere\Page\Admin\PaymentTokenEditor;
+use SkyVerge\Lumiere\Page\Frontend\AddPaymentMethod;
 use SkyVerge\Lumiere\Page\Frontend\Product;
 use SkyVerge\Lumiere\Page\Frontend\Checkout;
 use SkyVerge\Lumiere\Page\Frontend\PaymentMethods;
@@ -57,6 +58,20 @@ abstract class CreditCardTokenizationCest extends CreditCardCest {
 	protected function check_tokenize_payment_method_field( Checkout $checkout_page ) {
 
 		$this->tester->tryToCheckOption( str_replace( '{gateway_id}', $this->get_gateway_id(), Checkout::FIELD_TOKENIZE_PAYMENT_METHOD ) );
+	}
+
+
+	/**
+	 * Performs the necessary steps to add a new payment method from the Add payment method page.
+	 *
+	 * Sometimes clicking the Add payment method button is the only necessary step.
+	 * Payment gateways may overwrite this method to perform extra steps, like entering a particular credit card number or test amount.
+	 *
+	 * @param AddPaymentMethod $add_payment_method_page Add payment method page object
+	 */
+	protected function add_payment_method( AddPaymentMethod $add_payment_method_page ) {
+
+		$this->tester->tryToClick( AddPaymentMethod::BUTTON_ADD );
 	}
 
 
@@ -177,6 +192,25 @@ abstract class CreditCardTokenizationCest extends CreditCardCest {
 		$this->tester->reloadPage();
 
 		$payment_methods_page->dontSeePaymentMethod( $token );
+	}
+
+
+	/**
+	 * @param PaymentTokenEditor $user_profile_page User profile page object
+	 * @param AddPaymentMethod $add_payment_method_page Add payment method page object
+	 * @param PaymentMethods $payment_methods_page Payment Methods page object
+	 */
+	public function try_adding_a_saved_payment_method( PaymentTokenEditor $user_profile_page, AddPaymentMethod $add_payment_method_page, PaymentMethods $payment_methods_page ) {
+
+		$this->tester->loginAsAdmin();
+
+		$this->tester->amOnPage( AddPaymentMethod::route() );
+		$this->add_payment_method( $add_payment_method_page );
+		$this->tester->waitForText( 'New payment method added' );
+
+		$this->tester->amOnPage( PaymentMethods::route() );
+		$token = $this->get_tokenized_payment_method_token();
+		$payment_methods_page->seePaymentMethod( $token );
 	}
 
 

@@ -142,6 +142,16 @@ PHP
 	# remove WooCommerce admin notices
 	wp option update woocommerce_admin_notices [] --format=json
 
+	wp user meta add 1 billing_first_name "John"
+	wp user meta add 1 billing_last_name "Doe"
+	wp user meta add 1 billing_address_1 "Ste 2B"
+	wp user meta add 1 billing_city "Boston"
+	wp user meta add 1 billing_state "MA"
+	wp user meta add 1 billing_postcode "02115"
+	wp user meta add 1 billing_country "US"
+	wp user meta add 1 billing_email "john@example.com"
+	wp user meta add 1 billing_phone "800-970-1259"
+
 	wp wc tool run db_update_routine --user=admin
 	wp wc tool run install_pages --user=admin
 
