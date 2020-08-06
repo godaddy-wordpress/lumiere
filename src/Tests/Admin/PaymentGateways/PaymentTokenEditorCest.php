@@ -90,6 +90,8 @@ abstract class PaymentTokenEditorCest extends PaymentGatewaysBase {
 			$token_editor->scrollToPaymentTokensTable();
 			$token_editor->seePaymentToken( $token );
 
+			$this->saved_cards_count++;
+
 		} else {
 
 			$token_editor->scrollToPaymentTokensTable();
@@ -101,9 +103,9 @@ abstract class PaymentTokenEditorCest extends PaymentGatewaysBase {
 			$this->save_payment_token_changes( $token_editor );
 
 			$this->see_payment_token( $token, $data, $token_editor );
-		}
 
-		$this->new_token_count++;
+			$this->new_token_count++;
+		}
 
 		return $token;
 	}
