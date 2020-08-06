@@ -13,6 +13,9 @@ abstract class PaymentGatewaysBase extends AcceptanceBase {
 	/** @var \WC_Product_Simple a shippable product */
 	protected $shippable_product;
 
+	/** @var string the number of credit cards saved during the current test */
+	protected $saved_cards_count = 0;
+
 
 	/**
 	 * Runs before each test.
@@ -22,6 +25,8 @@ abstract class PaymentGatewaysBase extends AcceptanceBase {
 	public function _before( $I ) {
 
 		parent::_before( $I );
+
+		$this->saved_cards_count = 0;
 
 		// TODO: consider creating these products as a run-once-per-suite action or using WP-CLI in wp-bootstrap.php {WV 2020-03-29}
 		$this->shippable_product = $this->tester->haveSimpleProductInDatabase( [ 'name' => 'Shippable 1' ] );
@@ -123,6 +128,49 @@ abstract class PaymentGatewaysBase extends AcceptanceBase {
 	protected function place_order( Checkout $checkout_page ) {
 
 		$this->tester->tryToClick( Checkout::BUTTON_PLACE_ORDER );
+	}
+
+
+	/**
+	 * Gets data for a new credit card payment.
+	 *
+	 * It uses the $saved_cards_count counter to return different data for each new payment in the same test.
+	 *
+	 * If using this method on a gateway, you must overwrite PaymentGatewaysBase::get_credit_cards_data() to return valid credit card data.
+	 *
+	 * @return array
+	 */
+	protected function get_new_credit_card_data() {
+
+		$cards = $this->get_credit_cards_data();
+
+		return ( count( $cards ) > $this->saved_cards_count ) ? current( array_slice( $cards, $this->saved_cards_count ) ) : reset( $cards );
+	}
+
+
+	/**
+	 * Gets data used to create new credit card payments.
+	 *
+	 * Subclasses can overwrite this method to return appropriate data for each gateway.
+	 *
+	 * @return array
+	 */
+	protected function get_credit_cards_data() {
+
+		$next_year = (int) date( 'y' ) + 1;
+
+		return [
+			'visa'       => [
+				'number' => '4111111111111111',
+				'expiry' => "12/{$next_year}",
+				'cvv'    => '123',
+			],
+			'mastercard' => [
+				'number' => '5100000010001004',
+				'expiry' => "12/{$next_year}",
+				'cvv'    => '123',
+			],
+		];
 	}
 
 
