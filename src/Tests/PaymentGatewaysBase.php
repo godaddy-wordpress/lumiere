@@ -125,7 +125,7 @@ abstract class PaymentGatewaysBase extends AcceptanceBase {
 		$token_id = $tokens[ count( $tokens ) - 1 ];
 		$token    = \WC_Payment_Tokens::get( (int) $token_id );
 
-		return $token ? $token->get_id() : null;
+		return $token ? $token->get_token() : null;
 	}
 
 
