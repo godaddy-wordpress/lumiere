@@ -108,19 +108,21 @@ abstract class PaymentGatewaysBase extends AcceptanceBase {
 
 
 	/**
-	 * Gets the raw token of a saved payment method.
+	 * Gets the raw token of the last saved payment method.
+	 *
+	 * Not using WooCommerceDB::grabPaymentTokenFromDatabase() because it always return the first token matching the criteria.
 	 *
 	 * @return string
 	 */
 	protected function get_tokenized_payment_method_token() {
 
-		$token = $this->tester->grabPaymentTokenFromDatabase( [
+		$tokens = $this->tester->grabColumnFromDatabase( $this->tester->grabPrefixedTableNameFor( 'woocommerce_payment_tokens' ), 'token_id', [
 			// TODO: get the admin username from the configuration and make the test user configurable {WV 2020-07-30}
 			'user_id'    => $this->tester->grabUserIdFromDatabase( 'admin' ),
 			'gateway_id' => $this->get_gateway_id(),
 		] );
 
-		return $token ? $token->get_token() : '';
+		return $tokens[ count( $tokens ) - 1 ];
 	}
 
 
