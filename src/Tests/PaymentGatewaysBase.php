@@ -86,6 +86,13 @@ abstract class PaymentGatewaysBase extends AcceptanceBase {
 	 */
 	protected function check_tokenize_payment_method_field( Checkout $checkout_page ) {
 
+		try {
+			$this->tester->waitForText( 'Use a new card' );
+			$this->tester->click( 'form input[id$=use-new-payment-method]' );
+		} catch ( \Exception $exception ) {
+			// do nothing
+		}
+
 		$this->tester->tryToCheckOption( str_replace( '{gateway_id}', $this->get_gateway_id(), Checkout::FIELD_TOKENIZE_PAYMENT_METHOD ) );
 	}
 

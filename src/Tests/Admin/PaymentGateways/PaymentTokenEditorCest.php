@@ -70,19 +70,11 @@ abstract class PaymentTokenEditorCest extends PaymentGatewaysBase {
 
 			$this->add_shippable_product_to_cart_and_go_to_checkout( $single_product_page );
 
-			try {
+			$checkout_page->fillBillingDetails();
 
-				// this means we already have a token
-				$this->tester->see( 'Use a new card' );
-
-			} catch ( \Exception $exception ) {
-
-				$checkout_page->fillBillingDetails();
-
-				// place an order and save the payment method
-				$this->place_order_and_tokenize_payment_method( $checkout_page );
-				$this->see_order_received();
-			}
+			// place an order and save the payment method
+			$this->place_order_and_tokenize_payment_method( $checkout_page );
+			$this->see_order_received();
 
 			$token = $this->get_tokenized_payment_method_token();
 
