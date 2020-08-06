@@ -202,8 +202,12 @@ abstract class CreditCardTokenizationCest extends CreditCardCest {
 	 */
 	public function try_adding_a_saved_payment_method( PaymentTokenEditor $user_profile_page, AddPaymentMethod $add_payment_method_page, PaymentMethods $payment_methods_page ) {
 
-		$this->tester->loginAsAdmin();
+		if ( ! $this->get_gateway()->supports_add_payment_method() ) {
 
+			return;
+		}
+
+		$this->tester->loginAsAdmin();
 		$this->tester->amOnPage( AddPaymentMethod::route() );
 		$this->add_payment_method( $add_payment_method_page );
 		$this->tester->waitForText( 'New payment method added' );
