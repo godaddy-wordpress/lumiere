@@ -192,6 +192,8 @@ class PaymentTokenEditor {
 
 		$this->tester->acceptPopup();
 
+		$this->tester->waitForJqueryAjax();
+
 		$this->tester->waitForElementNotVisible( $this->getPaymentTokenSelector( $token ) );
 	}
 

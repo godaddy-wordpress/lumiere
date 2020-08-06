@@ -39,29 +39,6 @@ abstract class CreditCardTokenizationCest extends CreditCardCest {
 
 
 	/**
-	 * Places an order and ticks the Securely Save to Account checkbox.
-	 *
-	 * @param Checkout $checkout_page Checkout page object
-	 */
-	protected function place_order_and_tokenize_payment_method( Checkout $checkout_page ) {
-
-		$this->check_tokenize_payment_method_field( $checkout_page );
-		$this->place_order( $checkout_page );
-	}
-
-
-	/**
-	 * Performs the necessary steps to tick the Securely Save to Account checkbox for the current gateway.
-	 *
-	 * @param Checkout $checkout_page Checkout page object
-	 */
-	protected function check_tokenize_payment_method_field( Checkout $checkout_page ) {
-
-		$this->tester->tryToCheckOption( str_replace( '{gateway_id}', $this->get_gateway_id(), Checkout::FIELD_TOKENIZE_PAYMENT_METHOD ) );
-	}
-
-
-	/**
 	 * Performs the necessary steps to add a new payment method from the Add payment method page.
 	 *
 	 * Sometimes clicking the Add payment method button is the only necessary step.
@@ -72,23 +49,6 @@ abstract class CreditCardTokenizationCest extends CreditCardCest {
 	protected function add_payment_method( AddPaymentMethod $add_payment_method_page ) {
 
 		$this->tester->tryToClick( AddPaymentMethod::BUTTON_ADD );
-	}
-
-
-	/**
-	 * Gets the raw token of a saved payment method.
-	 *
-	 * @return string
-	 */
-	protected function get_tokenized_payment_method_token() {
-
-		$token = $this->tester->grabPaymentTokenFromDatabase( [
-			// TODO: get the admin username from the configuration and make the test user configurable {WV 2020-07-30}
-			'user_id'    => $this->tester->grabUserIdFromDatabase( 'admin' ),
-			'gateway_id' => $this->get_gateway_id(),
-		] );
-
-		return $token ? $token->get_token() : '';
 	}
 
 
