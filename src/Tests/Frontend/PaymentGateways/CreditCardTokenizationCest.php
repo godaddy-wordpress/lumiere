@@ -192,11 +192,18 @@ abstract class CreditCardTokenizationCest extends CreditCardCest {
 
 
 	/**
+	 * @param \Codeception\Scenario $scenario Test scenario
 	 * @param Product $single_product_page Product page object
 	 * @param Checkout $checkout_page Checkout page object
 	 * @param PaymentTokenEditor $token_editor Payment Token Editor page object
 	 */
-	public function try_seeing_a_saved_payment_method_in_the_payment_tokens_editor( Product $single_product_page, Checkout $checkout_page, PaymentTokenEditor $token_editor ) {
+	public function try_seeing_a_saved_payment_method_in_the_payment_tokens_editor( Scenario $scenario, Product $single_product_page, Checkout $checkout_page, PaymentTokenEditor $token_editor ) {
+
+		if ( ! $this->get_gateway()->supports_token_editor() ) {
+
+			$scenario->skip( 'This gateway does not support this feature' );
+			return;
+		}
 
 		$this->add_shippable_product_to_cart_and_go_to_checkout( $single_product_page );
 
