@@ -56,7 +56,14 @@ class PaymentMethods {
 	 */
 	public function getPaymentMethodRowSelector( string $token ) {
 
-		return str_replace( '{token}', $token, self::SELECTOR_PAYMENT_METHOD_ROW );
+		if ( is_numeric( $token ) ) {
+			$replacement = $token;
+		} else {
+			// add quotation marks
+			$replacement = "'$token'";
+		}
+
+		return str_replace( '{token}', $replacement, self::SELECTOR_PAYMENT_METHOD_ROW );
 	}
 
 
