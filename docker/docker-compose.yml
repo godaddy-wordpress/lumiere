@@ -48,8 +48,6 @@ services:
     build: ngrok
     env_file:
       - $PWD/.env.lumiere
-    environment:
-      - NGROK_TOKEN
     ports:
       - "8040:8040"
 
