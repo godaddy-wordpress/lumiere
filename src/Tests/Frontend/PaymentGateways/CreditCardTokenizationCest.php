@@ -2,6 +2,7 @@
 
 namespace SkyVerge\Lumiere\Tests\Frontend\PaymentGateways;
 
+use Codeception\Scenario;
 use SkyVerge\Lumiere\Page\Admin\PaymentTokenEditor;
 use SkyVerge\Lumiere\Page\Frontend\AddPaymentMethod;
 use SkyVerge\Lumiere\Page\Frontend\Product;
@@ -156,14 +157,18 @@ abstract class CreditCardTokenizationCest extends CreditCardCest {
 
 
 	/**
+	 * @param \Codeception\Scenario $scenario Test scenario
 	 * @param PaymentTokenEditor $user_profile_page User profile page object
 	 * @param AddPaymentMethod $add_payment_method_page Add payment method page object
 	 * @param PaymentMethods $payment_methods_page Payment Methods page object
+	 *
+	 * @throws \Codeception\Exception\ModuleException
 	 */
-	public function try_adding_a_saved_payment_method( PaymentTokenEditor $user_profile_page, AddPaymentMethod $add_payment_method_page, PaymentMethods $payment_methods_page ) {
+	public function try_adding_a_saved_payment_method( Scenario $scenario, PaymentTokenEditor $user_profile_page, AddPaymentMethod $add_payment_method_page, PaymentMethods $payment_methods_page ) {
 
 		if ( ! $this->get_gateway()->supports_add_payment_method() ) {
 
+			$scenario->skip( 'This gateway does not support this feature' );
 			return;
 		}
 

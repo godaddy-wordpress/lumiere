@@ -2,6 +2,7 @@
 
 namespace SkyVerge\Lumiere\Tests\Admin\PaymentGateways;
 
+use Codeception\Scenario;
 use SkyVerge\Lumiere\Page\Admin\PaymentTokenEditor;
 use SkyVerge\Lumiere\Page\Frontend\Checkout;
 use SkyVerge\Lumiere\Page\Frontend\Product;
@@ -35,16 +36,20 @@ abstract class PaymentTokenEditorCest extends PaymentGatewaysBase {
 	 *
 	 * @see SV_WC_Payment_Gateway_Admin_Payment_Token_Editor::get_actions()
 	 *
+	 * @param \Codeception\Scenario $scenario Test scenario
 	 * @param PaymentTokenEditor $token_editor Payment Token Editor page object
 	 * @param Product $single_product_page Single product page object
 	 * @param Checkout $checkout_page Checkout page object
 	 */
-	public function try_adding_a_new_payment_token( PaymentTokenEditor $token_editor, Product $single_product_page, Checkout $checkout_page ) {
+	public function try_adding_a_new_payment_token( Scenario $scenario, PaymentTokenEditor $token_editor, Product $single_product_page, Checkout $checkout_page ) {
 
-		if ( ! $this->get_gateway()->get_api()->supports_get_tokenized_payment_methods() ) {
+		if ( $this->get_gateway()->get_api()->supports_get_tokenized_payment_methods() ) {
 
-			$this->add_new_payment_token( $token_editor, $single_product_page, $checkout_page );
+			$scenario->skip( 'This gateway does not support this feature' );
+			return;
 		}
+
+		$this->add_new_payment_token( $token_editor, $single_product_page, $checkout_page );
 	}
 
 
