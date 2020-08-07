@@ -11,10 +11,6 @@ use SkyVerge\Lumiere\Tests\PaymentGatewaysBase;
 abstract class CreditCardCest extends PaymentGatewaysBase {
 
 
-	/** @var \WC_Product_Simple a shippable product */
-	protected $shippable_product;
-
-
 	/**
 	 * Runs before each test.
 	 *
@@ -23,9 +19,6 @@ abstract class CreditCardCest extends PaymentGatewaysBase {
 	public function _before( $I ) {
 
 		parent::_before( $I );
-
-		// TODO: consider creating these products as a run-once-per-suite action or using WP-CLI in wp-bootstrap.php {WV 2020-03-29}
-		$this->shippable_product = $this->tester->haveSimpleProductInDatabase( [ 'name' => 'Shippable 1' ] );
 	}
 
 
@@ -44,21 +37,6 @@ abstract class CreditCardCest extends PaymentGatewaysBase {
 
 
 	/**
-	 * Adds a shippable product to the cart and redirects to the Checkout page.
-	 *
-	 * @param Product $single_product_page Product page object
-	 */
-	protected function add_shippable_product_to_cart_and_go_to_checkout( Product $single_product_page ) {
-
-		$this->tester->amOnPage( Product::route( $this->shippable_product ) );
-
-		$single_product_page->addSimpleProductToCart( $this->shippable_product );
-
-		$this->tester->amOnPage( Checkout::route() );
-	}
-
-
-	/**
 	 * @param Product $single_product_page Product page object
 	 * @param Checkout $checkout_page Checkout page object
 	 */
@@ -70,30 +48,6 @@ abstract class CreditCardCest extends PaymentGatewaysBase {
 
 		$this->place_order( $checkout_page );
 		$this->see_order_received();
-	}
-
-
-	/**
-	 * Performs the necessary steps to place a new order from the Checkout page.
-	 *
-	 * Normally clicking the Place Order button is the only necessary step.
-	 * Payment geteways may overwrite this method to perform extra steps, like entering a particular credit card number or test amount.
-	 *
-	 * @param Checkout $checkout_page Checkout page object
-	 */
-	protected function place_order( Checkout $checkout_page ) {
-
-		$this->tester->tryToClick( Checkout::BUTTON_PLACE_ORDER );
-	}
-
-
-	/**
-	 * Waits 30 seconds to see the Order received message.
-	 */
-	protected function see_order_received() {
-
-		$this->tester->waitForElementVisible( '.woocommerce-order-details', 30 );
-		$this->tester->see( 'Order received', '.entry-title' );
 	}
 
 

@@ -52,7 +52,7 @@ class PaymentTokenEditor {
 
 
 	/**
-	 * Returns the URL to the Payment Methods page.
+	 * Returns the URL to the user profile page.
 	 *
 	 * @return string
 	 */
@@ -192,6 +192,8 @@ class PaymentTokenEditor {
 
 		$this->tester->acceptPopup();
 
+		$this->tester->waitForJqueryAjax();
+
 		$this->tester->waitForElementNotVisible( $this->getPaymentTokenSelector( $token ) );
 	}
 
@@ -203,7 +205,7 @@ class PaymentTokenEditor {
 	 */
 	public function seePaymentToken( string $token ) {
 
-		$this->tester->waitForElementVisible( $this->getPaymentTokenSelector( $token ) );
+		$this->tester->waitForElement( $this->getPaymentTokenSelector( $token ) );
 		$this->tester->seeElement( $this->getPaymentTokenSelector( $token ) );
 	}
 

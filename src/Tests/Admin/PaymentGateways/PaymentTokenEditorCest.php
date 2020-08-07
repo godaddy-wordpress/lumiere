@@ -2,7 +2,10 @@
 
 namespace SkyVerge\Lumiere\Tests\Admin\PaymentGateways;
 
+use Codeception\Scenario;
 use SkyVerge\Lumiere\Page\Admin\PaymentTokenEditor;
+use SkyVerge\Lumiere\Page\Frontend\Checkout;
+use SkyVerge\Lumiere\Page\Frontend\Product;
 use SkyVerge\Lumiere\Tests\PaymentGatewaysBase;
 
 abstract class PaymentTokenEditorCest extends PaymentGatewaysBase {
@@ -29,34 +32,77 @@ abstract class PaymentTokenEditorCest extends PaymentGatewaysBase {
 
 
 	/**
+	 * Only tries to add a payment method in the token editor if refreshing through the API is not supported.
+	 *
+	 * @see SV_WC_Payment_Gateway_Admin_Payment_Token_Editor::get_actions()
+	 *
+	 * @param \Codeception\Scenario $scenario Test scenario
 	 * @param PaymentTokenEditor $token_editor Payment Token Editor page object
+	 * @param Product $single_product_page Single product page object
+	 * @param Checkout $checkout_page Checkout page object
 	 */
-	public function try_adding_a_new_payment_token( PaymentTokenEditor $token_editor ) {
+	public function try_adding_a_new_payment_token( Scenario $scenario, PaymentTokenEditor $token_editor, Product $single_product_page, Checkout $checkout_page ) {
 
-		$this->add_new_payment_token( $token_editor );
+		if ( $this->get_gateway()->get_api()->supports_get_tokenized_payment_methods() ) {
+
+			$scenario->skip( 'This gateway does not support this feature' );
+			return;
+		}
+
+		$this->add_new_payment_token( $token_editor, $single_product_page, $checkout_page );
 	}
 
 
 	/**
 	 * Performs the necessary steps to add a new payment token and save changes.
-	 * 
+	 *
 	 * Returns the raw token string for the new payment token.
 	 *
 	 * @param PaymentTokenEditor $token_editor Payment Token Editor page object
+	 * @param Product $single_product_page Single product page object
+	 * @param Checkout $checkout_page Checkout page object
 	 * @return string
 	 */
-	protected function add_new_payment_token( PaymentTokenEditor $token_editor ) {
+	protected function add_new_payment_token( PaymentTokenEditor $token_editor, Product $single_product_page, Checkout $checkout_page ) {
 
-		$token_editor->scrollToPaymentTokensTable();
-		$token_editor->showNewPaymentTokenFields();
+		/**
+		 * If refreshing tokens through the API is supported, adding a token in the payment token editor is not,
+		 * so we need to add it by placing an order.
+		 *
+		 * @see SV_WC_Payment_Gateway_Admin_Payment_Token_Editor::get_actions()
+		 */
+		if ( $this->get_gateway()->get_api()->supports_get_tokenized_payment_methods() ) {
 
-		$data  = $this->get_new_payment_token_data();
-		$token = $this->fill_new_payment_token_fields( $data, $token_editor );
+			$this->add_shippable_product_to_cart_and_go_to_checkout( $single_product_page );
 
-		$this->save_payment_token_changes( $token_editor );
-		$this->see_payment_token( $token, $data, $token_editor );
+			$checkout_page->fillBillingDetails();
 
-		$this->new_token_count++;
+			// place an order and save the payment method
+			$this->place_order_and_tokenize_payment_method( $checkout_page );
+			$this->see_order_received();
+
+			$token = $this->get_tokenized_payment_method_token();
+
+			$this->tester->amOnPage( PaymentTokenEditor::route( 1 ) );
+			$token_editor->scrollToPaymentTokensTable();
+			$token_editor->seePaymentToken( $token );
+
+			$this->saved_cards_count++;
+
+		} else {
+
+			$token_editor->scrollToPaymentTokensTable();
+			$token_editor->showNewPaymentTokenFields();
+
+			$data  = $this->get_new_payment_token_data();
+			$token = $this->fill_new_payment_token_fields( $data, $token_editor );
+
+			$this->save_payment_token_changes( $token_editor );
+
+			$this->see_payment_token( $token, $data, $token_editor );
+
+			$this->new_token_count++;
+		}
 
 		return $token;
 	}
@@ -64,9 +110,9 @@ abstract class PaymentTokenEditorCest extends PaymentGatewaysBase {
 
 	/**
 	 * Gets data for a new payment token.
-	 * 
+	 *
 	 * It uses the $new_token_count counter to return different data for each new payment token created in the same test.
-	 * 
+	 *
 	 * @return array
 	 */
 	protected function get_new_payment_token_data() {
@@ -79,9 +125,9 @@ abstract class PaymentTokenEditorCest extends PaymentGatewaysBase {
 
 	/**
 	 * Gets data used to create new payment tokens.
-	 * 
+	 *
 	 * Subclasses can overwrite this method to return appropriate data for each gateway.
-	 * 
+	 *
 	 * @return array
 	 */
 	protected function get_payment_tokens_data() {
@@ -105,7 +151,7 @@ abstract class PaymentTokenEditorCest extends PaymentGatewaysBase {
 
 	/**
 	 * Fills the fields used to add a new payment token.
-	 * 
+	 *
 	 * Returns the raw token string of the new payment token.
 	 *
 	 * @param array $data payment token data
@@ -155,11 +201,13 @@ abstract class PaymentTokenEditorCest extends PaymentGatewaysBase {
 
 	/**
 	 * @param PaymentTokenEditor $token_editor Payment Token Editor page object
+	 * @param Product $single_product_page Single product page object
+	 * @param Checkout $checkout_page Checkout page object
 	 */
-	public function try_marking_a_payment_token_as_default( PaymentTokenEditor $token_editor ) {
+	public function try_marking_a_payment_token_as_default( PaymentTokenEditor $token_editor, Product  $single_product_page, Checkout $checkout_page ) {
 
-		$first_token  = $this->add_new_payment_token( $token_editor );
-		$second_token = $this->add_new_payment_token( $token_editor );
+		$first_token  = $this->add_new_payment_token( $token_editor, $single_product_page, $checkout_page );
+		$second_token = $this->add_new_payment_token( $token_editor, $single_product_page, $checkout_page );
 
 		// confirm that the first token is automatically set as default
 		$token_editor->scrollToPaymentTokensTable();
@@ -188,10 +236,12 @@ abstract class PaymentTokenEditorCest extends PaymentGatewaysBase {
 
 	/**
 	 * @param PaymentTokenEditor $token_editor Payment Token Editor page object
+	 * @param Product $single_product_page Single product page object
+	 * @param Checkout $checkout_page Checkout page object
 	 */
-	public function try_removing_a_payment_token( PaymentTokenEditor $token_editor ) {
+	public function try_removing_a_payment_token( PaymentTokenEditor $token_editor, Product $single_product_page, Checkout $checkout_page ) {
 
-		$token = $this->add_new_payment_token( $token_editor );
+		$token = $this->add_new_payment_token( $token_editor, $single_product_page, $checkout_page );
 
 		$token_editor->scrollToPaymentTokensTable();
 		$token_editor->deletePaymentToken( $token );
