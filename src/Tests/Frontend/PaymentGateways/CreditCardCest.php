@@ -2,11 +2,24 @@
 
 namespace SkyVerge\Lumiere\Tests\Frontend\PaymentGateways;
 
+use Codeception\Actor;
+use Codeception\Module\WPWebDriver;
 use SkyVerge\Lumiere\Page\Frontend\Product;
 use SkyVerge\Lumiere\Page\Frontend\Checkout;
 use SkyVerge\Lumiere\Tests\PaymentGatewaysBase;
 
 abstract class CreditCardCest extends PaymentGatewaysBase {
+
+
+	/**
+	 * Runs before each test.
+	 *
+	 * @param WPWebDriver|Actor $I tester instance
+	 */
+	public function _before( $I ) {
+
+		parent::_before( $I );
+	}
 
 
 	/**

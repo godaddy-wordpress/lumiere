@@ -2,6 +2,8 @@
 
 namespace SkyVerge\Lumiere\Tests\Frontend\PaymentGateways;
 
+use Codeception\Actor;
+use Codeception\Module\WPWebDriver;
 use Codeception\Scenario;
 use SkyVerge\Lumiere\Page\Admin\PaymentTokenEditor;
 use SkyVerge\Lumiere\Page\Frontend\AddPaymentMethod;
@@ -13,13 +15,24 @@ abstract class CreditCardTokenizationCest extends CreditCardCest {
 
 
 	/**
+	 * Runs before each test.
+	 *
+	 * @param WPWebDriver|Actor $I tester instance
+	 */
+	public function _before( $I ) {
+
+		parent::_before( $I );
+
+		$this->tester->loginAsAdmin();
+	}
+
+
+	/**
 	 * @param Product $single_product_page Product page object
 	 * @param Checkout $checkout_page Checkout page object
 	 * @param PaymentMethods $payment_methods_page Payment Methods page object
 	 */
 	public function try_successful_transaction_for_shippable_product_saving_the_payment_method( Product $single_product_page, Checkout $checkout_page, PaymentMethods $payment_methods_page ) {
-
-		$this->tester->loginAsAdmin();
 
 		$this->add_shippable_product_to_cart_and_go_to_checkout( $single_product_page );
 
@@ -72,8 +85,6 @@ abstract class CreditCardTokenizationCest extends CreditCardCest {
 	 */
 	public function try_successful_transaction_for_shippable_product_with_saved_payment_method( Product $single_product_page, Checkout $checkout_page, PaymentMethods $payment_methods_page ) {
 
-		$this->tester->loginAsAdmin();
-
 		$this->add_shippable_product_to_cart_and_go_to_checkout( $single_product_page );
 
 		$checkout_page->fillBillingDetails();
@@ -123,8 +134,6 @@ abstract class CreditCardTokenizationCest extends CreditCardCest {
 	 */
 	public function try_editing_a_saved_payment_method( Product $single_product_page, Checkout $checkout_page, PaymentMethods $payment_methods_page ) {
 
-		$this->tester->loginAsAdmin();
-
 		$this->add_shippable_product_to_cart_and_go_to_checkout( $single_product_page );
 
 		$checkout_page->fillBillingDetails();
@@ -172,7 +181,6 @@ abstract class CreditCardTokenizationCest extends CreditCardCest {
 			return;
 		}
 
-		$this->tester->loginAsAdmin();
 		$this->tester->amOnPage( AddPaymentMethod::route() );
 		$this->add_payment_method( $add_payment_method_page );
 		$this->tester->waitForText( 'New payment method added' );
@@ -189,8 +197,6 @@ abstract class CreditCardTokenizationCest extends CreditCardCest {
 	 * @param PaymentTokenEditor $token_editor Payment Token Editor page object
 	 */
 	public function try_seeing_a_saved_payment_method_in_the_payment_tokens_editor( Product $single_product_page, Checkout $checkout_page, PaymentTokenEditor $token_editor ) {
-
-		$this->tester->loginAsAdmin();
 
 		$this->add_shippable_product_to_cart_and_go_to_checkout( $single_product_page );
 
