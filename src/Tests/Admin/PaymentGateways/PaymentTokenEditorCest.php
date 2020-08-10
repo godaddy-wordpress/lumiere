@@ -32,7 +32,7 @@ abstract class PaymentTokenEditorCest extends PaymentGatewaysBase {
 
 
 	/**
-	 * Only tries to add a payment method in the token editor if refreshing through the API is not supported.
+	 * Tries to add a payment method on the token editor.
 	 *
 	 * @see SV_WC_Payment_Gateway_Admin_Payment_Token_Editor::get_actions()
 	 *
@@ -43,7 +43,7 @@ abstract class PaymentTokenEditorCest extends PaymentGatewaysBase {
 	 */
 	public function try_adding_a_new_payment_token( Scenario $scenario, PaymentTokenEditor $token_editor, Product $single_product_page, Checkout $checkout_page ) {
 
-		if ( $this->get_gateway()->get_api()->supports_get_tokenized_payment_methods() ) {
+		if ( ! $this->supports_adding_payment_methods_on_the_token_editor() ) {
 
 			$scenario->skip( 'This gateway does not support this feature' );
 			return;
@@ -65,31 +65,24 @@ abstract class PaymentTokenEditorCest extends PaymentGatewaysBase {
 	 */
 	protected function add_new_payment_token( PaymentTokenEditor $token_editor, Product $single_product_page, Checkout $checkout_page ) {
 
-		/**
-		 * If refreshing tokens through the API is supported, adding a token in the payment token editor is not,
-		 * so we need to add it by placing an order.
-		 *
-		 * @see SV_WC_Payment_Gateway_Admin_Payment_Token_Editor::get_actions()
-		 */
-		if ( $this->get_gateway()->get_api()->supports_get_tokenized_payment_methods() ) {
+		// adding a token in the payment token editor is not supported, so we need to add it by placing an order
+		if ( ! $this->supports_adding_payment_methods_on_the_token_editor() ) {
 
-			$this->add_shippable_product_to_cart_and_go_to_checkout( $single_product_page );
-
-			$checkout_page->fillBillingDetails();
-
-			// place an order and save the payment method
-			$this->place_order_and_tokenize_payment_method( $checkout_page );
-			$this->see_order_received();
-
-			$token = $this->get_tokenized_payment_method_token();
-
-			$this->tester->amOnPage( PaymentTokenEditor::route( 1 ) );
-			$token_editor->scrollToPaymentTokensTable();
-			$token_editor->seePaymentToken( $token );
-
-			$this->saved_cards_count++;
+			$token = $this->add_new_payment_token_by_placing_order( $token_editor, $single_product_page, $checkout_page );
 
 		} else {
+
+			/**
+			 * If the gateway supports a customer ID but none is saved, we don't display the token editor, so we need to
+			 * first save a payment token by placing an order to create the customer ID, then we can add tokens in the
+			 * token editor.
+			 *
+			 * @see SV_WC_Payment_Gateway_Admin_User_Handler::display_token_editors()
+			 */
+			if ( $this->get_gateway() && $this->get_gateway()->supports_customer_id() && ! $this->get_gateway()->get_customer_id( 1, [ 'autocreate' => false ] ) ) {
+
+				$this->add_new_payment_token_by_placing_order( $token_editor, $single_product_page, $checkout_page );
+			}
 
 			$token_editor->scrollToPaymentTokensTable();
 			$token_editor->showNewPaymentTokenFields();
@@ -103,6 +96,38 @@ abstract class PaymentTokenEditorCest extends PaymentGatewaysBase {
 
 			$this->new_token_count++;
 		}
+
+		return $token;
+	}
+
+
+	/**
+	 * Performs the necessary steps to add a new payment token by placing an order.
+	 *
+	 * Returns the raw token string for the new payment token.
+	 *
+	 * @param PaymentTokenEditor $token_editor Payment Token Editor page object
+	 * @param Product $single_product_page Single product page object
+	 * @param Checkout $checkout_page Checkout page object
+	 * @return string
+	 */
+	protected function add_new_payment_token_by_placing_order( PaymentTokenEditor $token_editor, Product $single_product_page, Checkout $checkout_page ) {
+
+		$this->add_shippable_product_to_cart_and_go_to_checkout( $single_product_page );
+
+		$checkout_page->fillBillingDetails();
+
+		// place an order and save the payment method
+		$this->place_order_and_tokenize_payment_method( $checkout_page );
+		$this->see_order_received();
+
+		$token = $this->get_tokenized_payment_method_token();
+
+		$this->tester->amOnPage( PaymentTokenEditor::route( 1 ) );
+		$token_editor->scrollToPaymentTokensTable();
+		$token_editor->seePaymentToken( $token );
+
+		$this->saved_cards_count++;
 
 		return $token;
 	}
@@ -136,13 +161,25 @@ abstract class PaymentTokenEditorCest extends PaymentGatewaysBase {
 			'4421912014039990' => [
 				'token'     => '4421912014039990',
 				'card_type' => 'visa',
-				'last_four' => '1234',
+				'last_four' => '9990',
 				'expiry'    => '12/24'
 			],
 			'4421912014039991' => [
 				'token'     => '4421912014039991',
 				'card_type' => 'visa',
-				'last_four' => '6789',
+				'last_four' => '9991',
+				'expiry'    => '12/24'
+			],
+			'4263971921001307' => [
+				'token'     => '4263971921001307',
+				'card_type' => 'visa',
+				'last_four' => '1307',
+				'expiry'    => '12/24'
+			],
+			'5425232820001308' => [
+				'token'     => '5425232820001308',
+				'card_type' => 'master',
+				'last_four' => '1308',
 				'expiry'    => '12/24'
 			],
 		];
@@ -246,6 +283,25 @@ abstract class PaymentTokenEditorCest extends PaymentGatewaysBase {
 		$token_editor->scrollToPaymentTokensTable();
 		$token_editor->deletePaymentToken( $token );
 		$token_editor->dontSeePaymentToken( $token );
+	}
+
+
+	/**
+	 * Checks if this gateway supports adding payment methods on the token editor.
+	 */
+	private function supports_adding_payment_methods_on_the_token_editor() {
+
+		/**
+		 * If refreshing tokens through the API is supported, adding a token in the payment token editor is not.
+		 *
+		 * @see SV_WC_Payment_Gateway_Admin_Payment_Token_Editor::get_actions()
+		 */
+		if ( $this->get_gateway()->get_api()->supports_get_tokenized_payment_methods() ) {
+
+			return false;
+		}
+
+		return true;
 	}
 
 
