@@ -163,7 +163,7 @@ class PaymentTokenEditor {
 		$this->tester->tryToClick( self::BUTTON_SAVE );
 
 		// wait for the page to reload
-		$this->tester->waitForElementNotVisible( self::SELECTOR_NEW_PAYMENT_TOKEN_ROW );
+		$this->tester->waitForText( 'Profile updated' );
 	}
 
 

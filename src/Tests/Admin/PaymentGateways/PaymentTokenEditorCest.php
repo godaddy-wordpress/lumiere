@@ -246,9 +246,7 @@ abstract class PaymentTokenEditorCest extends PaymentGatewaysBase {
 		$first_token  = $this->add_new_payment_token( $token_editor, $single_product_page, $checkout_page );
 		$second_token = $this->add_new_payment_token( $token_editor, $single_product_page, $checkout_page );
 
-		// confirm that the first token is automatically set as default
 		$token_editor->scrollToPaymentTokensTable();
-		$token_editor->seeDefaultPaymentToken( $this->get_gateway()->get_id(), $first_token );
 
 		$this->select_payment_token_as_default( $second_token, $token_editor );
 		$this->save_payment_token_changes( $token_editor );
