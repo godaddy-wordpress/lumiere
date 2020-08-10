@@ -72,18 +72,6 @@ abstract class PaymentTokenEditorCest extends PaymentGatewaysBase {
 
 		} else {
 
-			/**
-			 * If the gateway supports a customer ID but none is saved, we don't display the token editor, so we need to
-			 * first save a payment token by placing an order to create the customer ID, then we can add tokens in the
-			 * token editor.
-			 *
-			 * @see SV_WC_Payment_Gateway_Admin_User_Handler::display_token_editors()
-			 */
-			if ( $this->get_gateway() && $this->get_gateway()->supports_customer_id() && ! $this->get_gateway()->get_customer_id( 1, [ 'autocreate' => false ] ) ) {
-
-				$this->add_new_payment_token_by_placing_order( $token_editor, $single_product_page, $checkout_page );
-			}
-
 			$token_editor->scrollToPaymentTokensTable();
 			$token_editor->showNewPaymentTokenFields();
 
@@ -247,6 +235,7 @@ abstract class PaymentTokenEditorCest extends PaymentGatewaysBase {
 		$second_token = $this->add_new_payment_token( $token_editor, $single_product_page, $checkout_page );
 
 		$token_editor->scrollToPaymentTokensTable();
+		$token_editor->seeDefaultPaymentToken( $this->get_gateway()->get_id(), $first_token );
 
 		$this->select_payment_token_as_default( $second_token, $token_editor );
 		$this->save_payment_token_changes( $token_editor );
@@ -295,6 +284,18 @@ abstract class PaymentTokenEditorCest extends PaymentGatewaysBase {
 		 * @see SV_WC_Payment_Gateway_Admin_Payment_Token_Editor::get_actions()
 		 */
 		if ( $this->get_gateway()->get_api()->supports_get_tokenized_payment_methods() ) {
+
+			return false;
+		}
+
+		/**
+		 * If the gateway supports a customer ID but none is saved, we don't display the token editor, so we need to
+		 * first save a payment token by placing an order to create the customer ID, then we can add tokens in the
+		 * token editor.
+		 *
+		 * @see SV_WC_Payment_Gateway_Admin_User_Handler::display_token_editors()
+		 */
+		if ( $this->get_gateway() && $this->get_gateway()->supports_customer_id() && ! $this->get_gateway()->get_customer_id( 1, [ 'autocreate' => false ] ) ) {
 
 			return false;
 		}
