@@ -170,3 +170,7 @@ An abstract Cest with common tests for credit card tokenization transactions. It
 - Place an order saving the payment method and checking that it shows up in the payment methods table
 - Edit the nickname of a payment method in the Payment Methods page
 - Delete a payment method from the Payment Methods page
+
+### VNC
+
+To see the tests as they happen using the VNC server: use Cmd + Space, and then type vnc://localhost:5900 to access. The password, if needed, is `secret`.
