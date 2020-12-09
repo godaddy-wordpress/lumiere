@@ -6,16 +6,56 @@ Lumiere is designed to get a functioning test suite up and running with minimal 
 - A fresh and isolated WordPress installation if you don't want to use Docker. **IMPORTANT:** <u>Do not use this installation for any other purpose, including performing manual tests. It should be reserved to acceptance tests</u>. Any changes might cause a problem with the test suite; any tests run by the suite might be destructive of the changes you made as well. To run manual tests you should dedicate a different installation.
 - [Selenium](https://www.seleniumhq.org/download/) for acceptance tests without Docker
 
-### New installation
+### Installation
+
+Lumiere is available as a Composer package. To install it, you should update your `composer.json` file to use a custom repository.
+
+1. Add Lumiere repository to composer:
+
+    ```
+    {
+      "type": "vcs",
+      "url": "git@github.com:gdcorp-partners/lumiere.git"
+    }
+    ```
+
+1. Require `skyverge/lumiere` as a development dependency:
+
+    ```
+    composer require codeception/module-db codeception/module-webdriver lucatume/wp-browser:2.4.8 skyverge/lumiere --update-with-all-dependencies --dev
+    ```
+
+    Prepend `COMPOSER_MEMORY_LIMIT=-1` to the command above if you get a memory related Fatal error.
+
+You should now be able to use `vendor/bin/lumiere` to configure your testing environment or run test suites.
+
+### Configuration
+
+Follow these steps to initialize Lumiere on a new plugin or after cloning a project where Lumiere was already initialized. This will ensure all configuration files and parameters are set.
+
 After installing via composer:
+
 1. `$ vendor/bin/lumiere up`
 1. Answer a series of configuration questions about your local WordPress installation(s) &mdash; the defaults work out of the box with the Docker services
-1. Commit all of the resulting generated files. Local files will already be ignored when appropriate.
 
-> **Note:** These setup steps only need to be performed once when first adding Lumiere to a plugin. After that, by default the plugin will be symlinked and unlinked from your test running site automatically when running tests. _However_, if you run into errors after cloning a project where Lumiere was already initialized, you may have to run `lumiere up` again to make sure all configuration files and parameters have been set.
+For new installations, make sure to commit all of the resulting generated files. Local files will already be ignored when appropriate.
 
 If you are using the Docker environment:
 
+1. Create a `docker-compose.yml` file if not already included in the repo
+    ```
+    version: '2'
+
+    services:
+      codeception:
+        volumes:
+          - $PWD:/project
+          - $PWD:/wordpress/wp-content/plugins/$PLUGIN_DIR
+
+      wordpress:
+        volumes:
+          - $PWD:/var/www/html/wp-content/plugins/$PLUGIN_DIR
+    ```
 1. Remove existing services:
     `docker-compose -f vendor/skyverge/lumiere/docker/docker-compose.yml -f docker-compose.yml --env-file=.env.lumiere.dist --project-name=lumiere down --volumes`
 1. Bootstrap fresh services:
@@ -30,7 +70,7 @@ If you are using a fresh WordPress installation:
 1. Make any further database changes that the plugin requires for _every_ acceptance test, e.g. enabling pretty permalinks
 1. Dump the database: `$ wp db export path/to/your/plugin/repo/tests/_data/dump.sql`
 
-Now add some tests!
+Now add some tests or run existing ones using [these commands](#commands).
 
 ### Commands
 
