@@ -4,6 +4,8 @@ namespace Codeception\Template;
 
 use Symfony\Component\Console\Exception\RuntimeException;
 use Symfony\Component\Yaml\Yaml;
+use function tad\WPBrowser\envFile;
+use function tad\WPBrowser\loadEnvMap;
 
 /**
  * Template for the `codecept init` command.
@@ -88,17 +90,17 @@ class Lumiere extends Wpbrowser {
 	 */
 	protected function loadEnvFile( $filename = '' ) {
 
-		if ( $filename ) {
-
-			if ( file_exists( $this->workDir . DIRECTORY_SEPARATOR .  $filename ) ) {
-				$dotEnv = \Dotenv\Dotenv::create( $this->workDir, $filename );
-				$dotEnv->load();
-			}
-
-		} else {
-
-			parent::loadEnvFile();
+		if ( ! $filename ) {
+			$filename = $this->envFileName;
 		}
+
+		$filepath = $this->workDir . DIRECTORY_SEPARATOR .  $filename;
+
+		if ( ! file_exists($filepath) ) {
+			return;
+		}
+
+		loadEnvMap(envFile($filepath));
 	}
 
 
