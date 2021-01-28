@@ -306,17 +306,6 @@ class Lumiere extends Wpbrowser {
 
 		// create codeception.yml
 		$config = [
-			'extensions' => [
-				'enabled' => [
-					\tad\WPBrowser\Extension\Symlinker::class,
-				],
-				'config' => [
-					\tad\WPBrowser\Extension\Symlinker::class => [
-						'mode' => 'plugin',
-						'destination' => '%WP_ROOT_FOLDER%/wp-content/plugins/',
-					],
-				],
-			],
 			'params' => [
 				trim( $this->envFileName ),
 			],
