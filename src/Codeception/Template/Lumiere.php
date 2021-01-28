@@ -241,7 +241,7 @@ class Lumiere extends Wpbrowser {
 
 		$filename = $this->workDir . DIRECTORY_SEPARATOR . $this->envFileName;
 
-		$this->createEnvFile( $filename, $installation_data );
+		$this->createEnvFile( $filename, $this->noInteraction ? [] : $installation_data );
 
 		$this->toIgnore[] = $this->envFileName;
 
