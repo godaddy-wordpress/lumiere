@@ -52,6 +52,16 @@ class Lumiere extends Wpbrowser {
 	 */
 	public function setup( $interactive = true ) {
 
+		$this->noInteraction = (bool) $this->input->getOption('no-interaction');
+
+		if ($this->noInteraction || $this->quiet) {
+			$interactive = false;
+			$this->input->setInteractive(false);
+		} else {
+			$interactive = true;
+			$this->input->setInteractive(true);
+		}
+
 		// local config env file
 		$this->envFileName = '.env.lumiere';
 
@@ -281,7 +291,7 @@ class Lumiere extends Wpbrowser {
 
 		$written = file_put_contents( $filename, $contents );
 
-		if ( ! $written ) {
+		if ( false === $written ) {
 			throw new RuntimeException("Could not write {$filename} file!");
 		}
 	}
@@ -297,6 +307,7 @@ class Lumiere extends Wpbrowser {
 			'extends' => 'vendor/skyverge/lumiere/configs/codeception.yml',
 			'params' => [
 				trim( $this->distEnvFilename ),
+				'vendor/skyverge/lumiere/docker/.env',
 			],
 		];
 
