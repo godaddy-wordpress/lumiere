@@ -94,6 +94,7 @@ wp_bootstrap() {
 	echo "Creating integration_tests database if it doesn't exist"
 	mysql -h$DB_HOST -u$DB_USER -p$DB_PASSWORD -e "CREATE DATABASE IF NOT EXISTS integration_tests"
 
+	# make sure that there is a wp-config.php file
 	if [ ! -f wp-config.php ]; then
 
 		echo "Creating wp-config.php"
