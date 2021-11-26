@@ -112,7 +112,7 @@ wp_bootstrap() {
 		# overwrite existing configuration to make sure we are using the correct values
 		wp core config --dbhost=$DB_HOST --dbname=$DB_NAME --dbuser=$DB_USER --dbpass=$DB_PASSWORD --dbprefix=$TABLE_PREFIX --force --extra-php <<'PHP'
 // allows URLs to work while accessing the WordPress service from the host using mapped ports
-if ( 8443 === (int) $_SERVER['SERVER_PORT'] || 8080 === (int) $_SERVER['SERVER_PORT'] ) {
+if ( isset( $_SERVER['SERVER_PORT'] ) && (8443 === (int) $_SERVER['SERVER_PORT'] || 8080 === (int) $_SERVER['SERVER_PORT'] )) {
 
 	$protocol = 8443 === (int) $_SERVER['SERVER_PORT'] ? 'https' : 'http';
 
