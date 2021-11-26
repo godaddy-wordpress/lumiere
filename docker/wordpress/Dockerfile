@@ -1,4 +1,4 @@
-FROM wordpress:latest
+FROM wordpress:php8.0
 
 ADD apache2-foreground-with-ssl /usr/local/bin/
 
