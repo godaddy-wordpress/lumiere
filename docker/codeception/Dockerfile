@@ -1,4 +1,4 @@
-FROM php:7.4-cli-buster
+FROM php:8.0-cli-buster
 
 # Install required system packages
 RUN apt-get update && \
