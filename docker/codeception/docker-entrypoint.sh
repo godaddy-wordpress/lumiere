@@ -94,6 +94,9 @@ wp_bootstrap() {
 	echo "Creating integration_tests database if it doesn't exist"
 	mysql -h$DB_HOST -u$DB_USER -p$DB_PASSWORD -e "CREATE DATABASE IF NOT EXISTS integration_tests"
 
+	# create a directory to store extra configuration files
+	mkdir -p conf.d
+
 	# make sure that there is a wp-config.php file
 	if [ ! -f wp-config.php ]; then
 
@@ -131,6 +134,11 @@ if ( isset( $_SERVER['SERVER_PORT'] ) && (8443 === (int) $_SERVER['SERVER_PORT']
 
 if ( isset( $protocol ) && 'https' === $protocol ) {
 	$_SERVER['HTTPS'] = 'on';
+}
+
+// load additional configuration files
+foreach ( glob( dirname( __FILE__ ) . '/conf.d/*.php' ) as $file ) {
+	require_once $file;
 }
 PHP
 	fi
