@@ -3,7 +3,7 @@
   "description": "Test",
   "license": "GPL-2.0+",
   "require": {
-    "php" : "<=7.0",
+    "php" : "^7.0",
     "lucatume/wp-browser": "^2.6.17"
   },
   "autoload":{
