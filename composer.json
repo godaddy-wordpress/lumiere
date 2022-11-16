@@ -3,12 +3,29 @@
   "description": "Test",
   "license": "GPL-2.0+",
   "require": {
-    "lucatume/wp-browser": "^2.2"
+    "php" : "^7.4",
+    "lucatume/wp-browser": "^3.1",
+    "codeception/module-asserts": "^1.0",
+    "codeception/module-phpbrowser": "^1.0",
+    "codeception/module-webdriver": "^1.0",
+    "codeception/module-db": "^1.0",
+    "codeception/module-filesystem": "^1.0",
+    "codeception/module-rest": "^1.0",
+    "codeception/module-cli": "^1.0",
+    "codeception/util-universalframework": "^1.0"
   },
   "autoload":{
     "psr-4":{
       "SkyVerge\\Lumiere\\": "src",
       "Codeception\\": "src/Codeception"
+    }
+  },
+  "config": {
+    "platform": {
+      "php" : "7.4"
+    },
+    "allow-plugins": {
+      "kylekatarnls/update-helper": false
     }
   },
   "bin":["bin/lumiere"]
